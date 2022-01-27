@@ -1,0 +1,3 @@
+[submodule "external/MushMachine"]
+	path = external/MushMachine
+	url = https://github.com/MadeOfJelly/MushMachine.git
