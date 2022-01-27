@@ -14,6 +14,22 @@ add_executable(miniTD1
 	./services/main_menu.hpp
 	./services/main_menu.cpp
 
+	./components/enemy.hpp
+	./components/path_progress.hpp
+	./components/player_lives.hpp
+	./components/path.hpp
+	./components/path.cpp
+
+	./systems/successful_enemies.hpp
+	./systems/successful_enemies.cpp
+	./systems/progress_enemies.hpp
+	./systems/progress_enemies.cpp
+	./systems/progress_to_position.hpp
+	./systems/progress_to_position.cpp
+
+	./entities/enemy.hpp
+	./entities/enemy.cpp
+
 	./main1.cpp
 )
 
