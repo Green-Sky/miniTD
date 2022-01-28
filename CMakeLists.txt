@@ -23,7 +23,7 @@ option(BUILD_TESTING "Enable testing with ctest." OFF)
 include("${CMAKE_CURRENT_LIST_DIR}/external/MushMachine/mm_options_and_defines.cmake")
 add_subdirectory("external/MushMachine" EXCLUDE_FROM_ALL)
 
-#add_subdirectory("external/fx_draw")
+add_subdirectory("external/fx_draw" EXCLUDE_FROM_ALL)
 
 # Bump up warning levels appropriately for clang, gcc & msvc
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")

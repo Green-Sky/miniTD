@@ -27,7 +27,7 @@ void progress_to_position(
 		// remap to progress on segment
 		const float p1_prog = path.point_progress[p1_i];
 		const float p2_prog = path.point_progress[p1_i+1];
-		const float segment_progress = (prog.progress - p1_prog) * (p2_prog - p1_prog);
+		const float segment_progress = (prog.progress - p1_prog) / (p2_prog - p1_prog);
 		pos_comp.pos = glm::mix(path.points[p1_i], path.points[p1_i+1], segment_progress);
 	});
 }

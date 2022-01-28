@@ -54,9 +54,8 @@ void Path::updateValues(void) {
 	float current_length = 0.f;
 	prev = points.front();
 	for (size_t i = 1; i < points.size(); i++) {
-		const auto d = glm::distance(prev, points[i]);
-		point_progress.push_back(d/total_length);
-		current_length += d;
+		current_length += glm::distance(prev, points[i]);
+		point_progress.push_back(current_length/total_length);
 		prev = points[i];
 	}
 }

@@ -2,8 +2,6 @@
 
 #include <entt/entity/registry.hpp>
 
-#include <mm/logger.hpp>
-
 namespace mini_td::Systems {
 
 void progress_enemies(
@@ -26,8 +24,6 @@ void progress_enemies(
 
 		const float progress_speed = (speed / path_length) * delta;
 		path_progress.progress += progress_speed;
-
-		SPDLOG_INFO("new prog {}", path_progress.progress);
 	});
 }
 

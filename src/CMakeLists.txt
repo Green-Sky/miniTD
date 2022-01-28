@@ -30,6 +30,11 @@ add_executable(miniTD1
 	./entities/enemy.hpp
 	./entities/enemy.cpp
 
+	./opengl/render_tasks/map.hpp
+	./opengl/render_tasks/map.cpp
+	./opengl/render_tasks/enemies.hpp
+	./opengl/render_tasks/enemies.cpp
+
 	./main1.cpp
 )
 
@@ -47,6 +52,8 @@ target_link_libraries(miniTD1 PUBLIC
 	random
 
 	transform_system
+
+	fx_draw
 
 	mm_logo_screen
 )

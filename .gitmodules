@@ -1,3 +1,6 @@
 [submodule "external/MushMachine"]
 	path = external/MushMachine
 	url = https://github.com/MadeOfJelly/MushMachine.git
+[submodule "external/fx_draw"]
+	path = external/fx_draw
+	url = https://github.com/Green-Sky/fx_draw.git
