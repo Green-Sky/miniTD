@@ -9,6 +9,7 @@
 #include <mm/services/imgui_s.hpp>
 #include <mm/services/organizer_scene.hpp>
 #include "./services/main_menu.hpp"
+#include "./services/game_hud.hpp"
 
 #include <entt/entity/registry.hpp>
 
@@ -29,6 +30,7 @@ bool setup_engine(MM::Engine& engine, int argc, char** argv) {
 		MM::Services::OrganizerSceneService,
 
 		mini_td::Services::MainMenu,
+		mini_td::Services::GameHUD,
 
 		// sd is allways the last, since it kicks of the first screen
 		MM::Services::ScreenDirector

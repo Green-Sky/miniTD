@@ -3,6 +3,7 @@
 #include <mm/services/opengl_renderer.hpp>
 #include <mm/services/imgui_s.hpp>
 #include <mm/services/organizer_scene.hpp>
+#include "../services/game_hud.hpp"
 
 #include <mm/opengl/render_tasks/imgui.hpp>
 
@@ -13,6 +14,7 @@
 #include "../systems/successful_enemies.hpp"
 #include "../systems/progress_enemies.hpp"
 #include "../systems/progress_to_position.hpp"
+#include "../systems/spawn_group_update.hpp"
 
 #include "../entities/enemy.hpp"
 
@@ -50,7 +52,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 
 		scene.set<MM::Engine&>(engine);
 
-		scene.set<Components::PlayerLives>(100);
+		scene.set<Components::PlayerLives>(100, 100);
 		auto& path = scene.set<Components::Path>();
 		{ // map
 			path.points = {
@@ -73,14 +75,40 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		}
 
 		auto& org = scene.set<entt::organizer>();
+		org.emplace<Systems::spawn_group_update>("spawn_group_update");
 		org.emplace<Systems::successful_enemies>("successful_enemies");
 		org.emplace<Systems::progress_enemies>("progress_enemies");
 		org.emplace<Systems::progress_to_position>("progress_to_position");
 
+#if 0
 		{ // spawn tset enemy
 			for (size_t i = 0; i < 9; i++) {
 				Entities::spawn_enemy(scene, i + 1, -0.1f*i);
 			}
+		}
+#endif
+		{ // spawn groups test
+			auto e = scene.create();
+			auto& sg = scene.emplace<Components::SpawnGroup>(e);
+			sg.level = 1;
+			sg.count = 16;
+			sg.interval = 1.3f;
+		}
+		{ // spawn groups test
+			auto e = scene.create();
+			auto& sg = scene.emplace<Components::SpawnGroup>(e);
+			sg.level = 2;
+			sg.count = 4;
+			sg.interval = 3.f;
+			sg.time_accu = -5.f;
+		}
+		{ // spawn groups test
+			auto e = scene.create();
+			auto& sg = scene.emplace<Components::SpawnGroup>(e);
+			sg.level = 1;
+			sg.count = 40;
+			sg.interval = 0.2f;
+			sg.time_accu = -20.f;
 		}
 
 		engine.getService<MM::Services::OrganizerSceneService>().changeSceneNow(std::move(new_scene));
@@ -92,6 +120,7 @@ void create_game_sp(MM::Engine& engine, MM::Services::ScreenDirector::Screen& sc
 	screen.start_enable.push_back(engine.type<MM::Services::OpenGLRenderer>());
 	screen.start_enable.push_back(engine.type<MM::Services::ImGuiService>());
 	screen.start_enable.push_back(engine.type<MM::Services::OrganizerSceneService>());
+	screen.start_enable.push_back(engine.type<mini_td::Services::GameHUD>());
 
 	// start disable
 	//screen.start_disable.push_back();
@@ -99,6 +128,7 @@ void create_game_sp(MM::Engine& engine, MM::Services::ScreenDirector::Screen& sc
 	// ####################
 	// end disable
 	//screen.end_disable.push_back(engine.type<mini_td::Services::MainMenu>());
+	screen.end_disable.push_back(engine.type<mini_td::Services::GameHUD>());
 	screen.end_disable.push_back(engine.type<MM::Services::OrganizerSceneService>());
 
 	screen.start_fn = game_sp_start_fn;

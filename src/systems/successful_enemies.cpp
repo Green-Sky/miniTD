@@ -20,7 +20,7 @@ void successful_enemies(
 
 			player_lives.lives -= enemy.level;
 
-			SPDLOG_INFO("lost {} lives", enemy.level);
+			SPDLOG_INFO("lost {} lives, {}/{}", enemy.level, player_lives.lives, player_lives.max);
 		}
 	});
 

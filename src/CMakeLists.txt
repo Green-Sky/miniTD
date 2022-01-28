@@ -13,12 +13,16 @@ add_executable(miniTD1
 
 	./services/main_menu.hpp
 	./services/main_menu.cpp
+	./services/game_hud.hpp
+	./services/game_hud.cpp
 
 	./components/enemy.hpp
 	./components/path_progress.hpp
 	./components/player_lives.hpp
 	./components/path.hpp
 	./components/path.cpp
+	./components/wave.hpp
+	./components/spawn_group.hpp
 
 	./systems/successful_enemies.hpp
 	./systems/successful_enemies.cpp
@@ -26,6 +30,8 @@ add_executable(miniTD1
 	./systems/progress_enemies.cpp
 	./systems/progress_to_position.hpp
 	./systems/progress_to_position.cpp
+	./systems/spawn_group_update.hpp
+	./systems/spawn_group_update.cpp
 
 	./entities/enemy.hpp
 	./entities/enemy.cpp
