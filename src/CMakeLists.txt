@@ -23,6 +23,8 @@ add_executable(miniTD1
 	./components/path.cpp
 	./components/wave.hpp
 	./components/spawn_group.hpp
+	./components/projectile.hpp
+	./components/damage.hpp
 
 	./systems/successful_enemies.hpp
 	./systems/successful_enemies.cpp
@@ -32,14 +34,26 @@ add_executable(miniTD1
 	./systems/progress_to_position.cpp
 	./systems/spawn_group_update.hpp
 	./systems/spawn_group_update.cpp
+	./systems/projectile_velocity.hpp
+	./systems/projectile_velocity.cpp
+	./systems/projectile_collision.hpp
+	./systems/projectile_collision.cpp
+	./systems/damage.hpp
+	./systems/damage.cpp
 
 	./entities/enemy.hpp
 	./entities/enemy.cpp
+	./entities/spawn_group.hpp
+	./entities/spawn_group.cpp
+	./entities/projectile.hpp
+	./entities/projectile.cpp
 
 	./opengl/render_tasks/map.hpp
 	./opengl/render_tasks/map.cpp
 	./opengl/render_tasks/enemies.hpp
 	./opengl/render_tasks/enemies.cpp
+	./opengl/render_tasks/projectiles.hpp
+	./opengl/render_tasks/projectiles.cpp
 
 	./main1.cpp
 )
@@ -58,6 +72,8 @@ target_link_libraries(miniTD1 PUBLIC
 	random
 
 	transform_system
+
+	simple_velocity_system
 
 	fx_draw
 

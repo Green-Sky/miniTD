@@ -11,18 +11,24 @@
 #include <entt/entity/organizer.hpp>
 
 // systems
+#include <mm/systems/simple_velocity_system2d.hpp>
 #include "../systems/successful_enemies.hpp"
 #include "../systems/progress_enemies.hpp"
 #include "../systems/progress_to_position.hpp"
 #include "../systems/spawn_group_update.hpp"
+#include "../systems/projectile_velocity.hpp"
+#include "../systems/projectile_collision.hpp"
+#include "../systems/damage.hpp"
 
-#include "../entities/enemy.hpp"
+#include "../entities/spawn_group.hpp"
+#include "../entities/projectile.hpp"
 
 #include "../components/player_lives.hpp"
 #include "../components/path.hpp"
 
 #include "../opengl/render_tasks/map.hpp"
 #include "../opengl/render_tasks/enemies.hpp"
+#include "../opengl/render_tasks/projectiles.hpp"
 
 #include <mm/opengl/camera_3d.hpp>
 
@@ -41,6 +47,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		rs.render_tasks.clear();
 		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Map>(engine);
 		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Enemies>(engine);
+		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Projectiles>(engine);
 		rs.addRenderTask<MM::OpenGL::RenderTasks::ImGuiRT>(engine);
 		// TODO: fx_draw
 	}
@@ -79,6 +86,10 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		org.emplace<Systems::successful_enemies>("successful_enemies");
 		org.emplace<Systems::progress_enemies>("progress_enemies");
 		org.emplace<Systems::progress_to_position>("progress_to_position");
+		org.emplace<Systems::projectile_velocity>("projectile_velocity");
+		org.emplace<MM::Systems::simple_positional_velocity>("simple_positional_velocity");
+		org.emplace<Systems::projectile_collision>("projectile_collision");
+		org.emplace<Systems::damage>("damage");
 
 #if 0
 		{ // spawn tset enemy
@@ -88,27 +99,22 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		}
 #endif
 		{ // spawn groups test
-			auto e = scene.create();
-			auto& sg = scene.emplace<Components::SpawnGroup>(e);
-			sg.level = 1;
-			sg.count = 16;
-			sg.interval = 1.3f;
+			Entities::spawn_spawn_group(scene, 1, 16, 1.3f);
+
+			Entities::spawn_spawn_group(scene, 2, 4, 3.f, -6.f);
+
+			Entities::spawn_spawn_group(scene, 1, 40, 0.2f, -24.f);
 		}
-		{ // spawn groups test
-			auto e = scene.create();
-			auto& sg = scene.emplace<Components::SpawnGroup>(e);
-			sg.level = 2;
-			sg.count = 4;
-			sg.interval = 3.f;
-			sg.time_accu = -5.f;
-		}
-		{ // spawn groups test
-			auto e = scene.create();
-			auto& sg = scene.emplace<Components::SpawnGroup>(e);
-			sg.level = 1;
-			sg.count = 40;
-			sg.interval = 0.2f;
-			sg.time_accu = -20.f;
+
+		{ // spawn test pj
+			Entities::spawn_projectile(
+				scene,
+				0.5f,
+				3,
+				{5,-5},
+				(0.5f - 0.125f) * glm::two_pi<float>(),
+				0.1f
+			);
 		}
 
 		engine.getService<MM::Services::OrganizerSceneService>().changeSceneNow(std::move(new_scene));
