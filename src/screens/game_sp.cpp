@@ -78,7 +78,9 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		org.emplace<Systems::progress_to_position>("progress_to_position");
 
 		{ // spawn tset enemy
-			Entities::spawn_enemy(scene, 1);
+			for (size_t i = 0; i < 9; i++) {
+				Entities::spawn_enemy(scene, i + 1, -0.1f*i);
+			}
 		}
 
 		engine.getService<MM::Services::OrganizerSceneService>().changeSceneNow(std::move(new_scene));
