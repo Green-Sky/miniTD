@@ -142,7 +142,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		}
 #endif
 		{ // test tower
-			Entities::spawn_tower_type2(scene, {5.f, -4.5f});
+			Entities::spawn_tower_type1(scene, {5.f, -4.5f});
 		}
 
 		engine.getService<MM::Services::OrganizerSceneService>().changeSceneNow(std::move(new_scene));
