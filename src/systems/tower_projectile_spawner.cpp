@@ -3,8 +3,12 @@
 #include <entt/entity/registry.hpp>
 
 #include "../entities/projectile.hpp"
+#include <mm/components/velocity2d_position.hpp>
 
 #include <glm/trigonometric.hpp>
+#include <glm/geometric.hpp>
+
+#include <mm/logger.hpp>
 
 namespace mini_td::Systems {
 
@@ -16,11 +20,12 @@ void tower_projectile_spawner(
 		if (cooldown.heat <= 0.f && scene.valid(t_target.e)) {
 			cooldown.heat = 1.f;
 
+			// TODO: predict?
+			// TODO: we need vel and angle
+
 			// get dir vec
 			const auto& target_pos = scene.get<MM::Components::Position2D>(t_target.e).pos;
 			const glm::vec2 target_vec = target_pos - t_pos_comp.pos;
-
-			// TODO: predict?
 
 			// we assume lenth is not 0
 

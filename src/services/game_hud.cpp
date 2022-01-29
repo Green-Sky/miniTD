@@ -58,58 +58,85 @@ void GameHUD::render(MM::Engine& engine) {
 		if (ImGui::Begin("toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar)) {
 			if (ImGui::BeginTabBar("tabs")) {
 				if (ImGui::BeginTabItem("Build")) {
-					ImGui::TextUnformatted("Particle Cannon");
-					drawTower(true, false, {60, 60});
-					ImGui::SameLine();
-					ImGui::TextUnformatted(
-						" - range: long\n"
-						" - projectile:\n"
-						"   - small\n"
-						"   - fast\n"
-						"   - high dmg (?)\n"
-						" - heat decay: low\n"
-					);
-
-					ImGui::Separator();
-
-					ImGui::TextUnformatted("Neutrino Bomber");
-					drawTower(false, false, {60, 60});
-					ImGui::SameLine();
-					ImGui::TextUnformatted(
-						" - range: short-ish\n"
-						" - projectile:\n"
-						"   - large\n"
-						"   - slow\n"
-						"   - high dmg\n"
-						" - heat decay: low\n"
-					);
-
-					ImGui::Separator();
-
-					ImGui::TextUnformatted("Burst Laser");
-					drawTower(false, true, {60, 60});
-					ImGui::SameLine();
-					ImGui::TextUnformatted(
-						" - range: short-ish\n"
-						" - ray:\n"
-						"   - low dmg\n"
-						" - heat decay: high\n"
-					);
-
-					ImGui::Separator();
-
-					ImGui::TextUnformatted("X Laser");
-					drawTower(true, true, {60, 60});
-					ImGui::SameLine();
-					ImGui::TextUnformatted(
-						" - range: long (very)\n"
-						" - ray:\n"
-						"   - high dmg\n"
-						" - heat decay: low\n"
-					);
-
-					if (ImGui::Button("BuildTower")) {
+					if (towerButton("##pc", true, false, {60, 60})) {
 					}
+					if (ImGui::IsItemHovered()) {
+						ImGui::BeginTooltip();
+
+						ImGui::TextUnformatted("Particle Cannon");
+						drawTower(true, false, {60, 60}, ImGui::GetCursorScreenPos());
+						ImGui::Dummy({60, 60});
+						ImGui::SameLine();
+						ImGui::TextUnformatted(
+							" - range: long\n"
+							" - projectile:\n"
+							"   - small\n"
+							"   - fast\n"
+							"   - low dmg\n"
+							" - heat decay: low\n"
+						);
+
+						ImGui::EndTooltip();
+					}
+
+					ImGui::SameLine();
+
+					if (towerButton("##nb", false, false, {60, 60})) {
+					}
+					if (ImGui::IsItemHovered()) {
+						ImGui::BeginTooltip();
+						ImGui::TextUnformatted("Neutrino Bomber");
+						drawTower(false, false, {60, 60}, ImGui::GetCursorScreenPos());
+						ImGui::Dummy({60, 60});
+						ImGui::SameLine();
+						ImGui::TextUnformatted(
+							" - range: short-ish\n"
+							" - projectile:\n"
+							"   - large\n"
+							"   - slow\n"
+							"   - high dmg\n"
+							" - heat decay: low\n"
+						);
+						ImGui::EndTooltip();
+					}
+
+
+					if (towerButton("##bl", false, true, {60, 60})) {
+					}
+					if (ImGui::IsItemHovered()) {
+						ImGui::BeginTooltip();
+						ImGui::TextUnformatted("Burst Laser");
+						drawTower(false, true, {60, 60}, ImGui::GetCursorScreenPos());
+						ImGui::Dummy({60, 60});
+						ImGui::SameLine();
+						ImGui::TextUnformatted(
+							" - range: short-ish\n"
+							" - ray:\n"
+							"   - low dmg\n"
+							" - heat decay: high\n"
+						);
+						ImGui::EndTooltip();
+					}
+
+					ImGui::SameLine();
+
+					if (towerButton("##xl", true, true, {60, 60})) {
+					}
+					if (ImGui::IsItemHovered()) {
+						ImGui::BeginTooltip();
+						ImGui::TextUnformatted("X Laser");
+						drawTower(true, true, {60, 60}, ImGui::GetCursorScreenPos());
+						ImGui::Dummy({60, 60});
+						ImGui::SameLine();
+						ImGui::TextUnformatted(
+							" - range: long (very)\n"
+							" - ray:\n"
+							"   - high dmg\n"
+							" - heat decay: low\n"
+						);
+						ImGui::EndTooltip();
+					}
+
 					ImGui::EndTabItem();
 				}
 				if (ImGui::BeginTabItem("Settings")) {
@@ -140,23 +167,65 @@ void GameHUD::render(MM::Engine& engine) {
 }
 
 // TODO: rendering is a hack
-void GameHUD::drawTower(bool outer, bool inner, const ImVec2& size) {
+void GameHUD::drawTower(bool outer, bool inner, const ImVec2& size, const ImVec2& pos) {
 	auto* dl = ImGui::GetWindowDrawList();
-	const auto& cp = ImGui::GetCursorScreenPos();
+	//const auto& cp = ImGui::GetCursorScreenPos();
+
+	const float padding = 0.05f;
+
+	const ImVec2 padded_size {
+		size.x - size.x*padding*2.f,
+		size.y - size.y*padding*2.f
+	};
+
+	const ImVec2 padded_cp {
+		pos.x + size.x*padding,
+		pos.y + size.y*padding
+	};
+
 
 	// outer
-	dl->AddCircle({cp.x + size.x*0.5f, cp.y + size.y*0.5f}, size.x*0.5f, IM_COL32_WHITE, outer ? 4 : 0);
+	dl->AddCircle(
+		{padded_cp.x + padded_size.x*0.5f, padded_cp.y + padded_size.y*0.5f},
+		padded_size.x*0.5f,
+		IM_COL32_WHITE,
+		outer ? 4 : 0
+	);
 
 	// inner
 	if (inner) {
 		// cross
-		dl->AddLine({cp.x + size.x*0.5f, cp.y}, {cp.x + size.x*0.5f, cp.y + size.y}, IM_COL32_WHITE);
-		dl->AddLine({cp.x, cp.y + size.y*0.5f}, {cp.x + size.x, cp.y + size.y*0.5f}, IM_COL32_WHITE);
+		dl->AddLine(
+			{padded_cp.x + padded_size.x*0.5f, padded_cp.y},
+			{padded_cp.x + padded_size.x*0.5f, padded_cp.y + padded_size.y},
+			IM_COL32_WHITE
+		);
+		dl->AddLine(
+			{padded_cp.x, padded_cp.y + padded_size.y*0.5f},
+			{padded_cp.x + padded_size.x, padded_cp.y + padded_size.y*0.5f},
+			IM_COL32_WHITE
+		);
 	} else {
-		dl->AddCircle({cp.x + size.x*0.5f, cp.y + size.y*0.5f}, size.x*0.5f*0.333f, IM_COL32_WHITE);
+		dl->AddCircle(
+			{padded_cp.x + padded_size.x*0.5f, padded_cp.y + padded_size.y*0.5f},
+			padded_size.x*0.5f*0.333f,
+			IM_COL32_WHITE
+		);
 	}
 
-	ImGui::Dummy(size);
+	// frame
+	dl->AddRect(
+		pos,
+		{pos.x + size.x, pos.y + size.y},
+		IM_COL32_WHITE
+	);
+}
+
+bool GameHUD::towerButton(const char* title, bool outer, bool inner, const ImVec2& size) {
+	const auto cp = ImGui::GetCursorScreenPos();
+	const bool pressed = ImGui::Button(title, size);
+	drawTower(outer, inner, size, cp);
+	return pressed;
 }
 
 } // mini_td::Services

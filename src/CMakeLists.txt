@@ -47,6 +47,8 @@ add_executable(miniTD1
 	./systems/damage.cpp
 	./systems/target_first_best.hpp
 	./systems/target_first_best.cpp
+	./systems/target_first.hpp
+	./systems/target_first.cpp
 	./systems/tower_cooldown.hpp
 	./systems/tower_cooldown.cpp
 	./systems/tower_projectile_spawner.hpp

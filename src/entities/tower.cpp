@@ -19,19 +19,20 @@ namespace mini_td::Entities {
 // - projectile:
 //   - small
 //   - fast
-//   - high dmg (?)
+//   - low dmg
 // - heat decay: low
 // - art type: 3
 void spawn_tower_type1(MM::Scene& scene, glm::vec2 pos) {
 	auto e = scene.create();
 	scene.emplace<Components::Target>(e, 5.f);
-	scene.emplace<Components::TargettingTag_FirstBest>(e);
+	scene.emplace<Components::TargettingTag_First>(e);
 	scene.emplace<MM::Components::Position2D>(e, pos);
-	scene.emplace<Components::TowerCooldown>(e, 2.f, 0.f);
+	scene.emplace<Components::TowerCooldown>(e, 2.5f, 0.f);
+	//scene.emplace<Components::TowerCooldown>(e, 6.f, 0.f);
 	auto& tpjs = scene.emplace<Components::TowerProjectileSpawner>(e);
 	tpjs.pj.radius = 0.05f;
 	tpjs.pj.velocity = 3.f;
-	tpjs.pj.damage = 2;
+	tpjs.pj.damage = 1;
 	scene.emplace<Components::TowerArtType3>(e);
 }
 
@@ -46,7 +47,7 @@ void spawn_tower_type1(MM::Scene& scene, glm::vec2 pos) {
 void spawn_tower_type2(MM::Scene& scene, glm::vec2 pos) {
 	auto e = scene.create();
 	scene.emplace<Components::Target>(e, 2.f);
-	scene.emplace<Components::TargettingTag_FirstBest>(e);
+	scene.emplace<Components::TargettingTag_First>(e);
 	scene.emplace<MM::Components::Position2D>(e, pos);
 	scene.emplace<Components::TowerCooldown>(e, 0.3f, 0.f);
 	auto& tpjs = scene.emplace<Components::TowerProjectileSpawner>(e);

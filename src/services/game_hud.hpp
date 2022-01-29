@@ -18,7 +18,8 @@ class GameHUD : public MM::Services::Service {
 		void render(MM::Engine& engine);
 
 		// true = rect
-		void drawTower(bool outer, bool inner, const ImVec2& size);
+		void drawTower(bool outer, bool inner, const ImVec2& size, const ImVec2& pos);
+		bool towerButton(const char* title, bool outer, bool inner, const ImVec2& size);
 
 		bool _toolbar {true};
 };

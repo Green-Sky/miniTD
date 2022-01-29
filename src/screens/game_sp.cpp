@@ -21,6 +21,7 @@
 #include "../systems/projectile_bounds_check.hpp"
 #include "../systems/damage.hpp"
 #include "../systems/target_first_best.hpp"
+#include "../systems/target_first.hpp"
 #include "../systems/tower_cooldown.hpp"
 #include "../systems/tower_projectile_spawner.hpp"
 
@@ -99,6 +100,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		org.emplace<Systems::projectile_bounds_check>("projectile_bounds_check");
 		org.emplace<Systems::damage>("damage");
 		org.emplace<Systems::target_first_best>("target_first_best");
+		org.emplace<Systems::target_first>("target_first");
 		org.emplace<Systems::tower_cooldown>("tower_cooldown");
 		org.emplace<Systems::tower_projectile_spawner>("tower_projectile_spawner");
 
