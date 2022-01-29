@@ -41,6 +41,8 @@ add_executable(miniTD1
 	./systems/projectile_velocity.cpp
 	./systems/projectile_collision.hpp
 	./systems/projectile_collision.cpp
+	./systems/projectile_bounds_check.hpp
+	./systems/projectile_bounds_check.cpp
 	./systems/damage.hpp
 	./systems/damage.cpp
 	./systems/target_first_best.hpp

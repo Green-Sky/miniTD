@@ -18,6 +18,7 @@
 #include "../systems/spawn_group_update.hpp"
 #include "../systems/projectile_velocity.hpp"
 #include "../systems/projectile_collision.hpp"
+#include "../systems/projectile_bounds_check.hpp"
 #include "../systems/damage.hpp"
 #include "../systems/target_first_best.hpp"
 #include "../systems/tower_cooldown.hpp"
@@ -95,6 +96,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		org.emplace<Systems::projectile_velocity>("projectile_velocity");
 		org.emplace<MM::Systems::simple_positional_velocity>("simple_positional_velocity");
 		org.emplace<Systems::projectile_collision>("projectile_collision");
+		org.emplace<Systems::projectile_bounds_check>("projectile_bounds_check");
 		org.emplace<Systems::damage>("damage");
 		org.emplace<Systems::target_first_best>("target_first_best");
 		org.emplace<Systems::tower_cooldown>("tower_cooldown");
