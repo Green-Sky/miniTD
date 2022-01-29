@@ -25,17 +25,15 @@
 
 #include "../entities/spawn_group.hpp"
 #include "../entities/projectile.hpp"
+#include "../entities/tower.hpp"
 
 #include "../components/player_lives.hpp"
 #include "../components/path.hpp"
-#include "../components/target.hpp"
-#include "../components/tower_cooldown.hpp"
-#include "../components/tower_projectile_spawner.hpp"
 
 #include "../opengl/render_tasks/map.hpp"
 #include "../opengl/render_tasks/enemies.hpp"
 #include "../opengl/render_tasks/projectiles.hpp"
-#include "mm/components/position2d.hpp"
+#include "../opengl/render_tasks/towers.hpp"
 
 #include <mm/opengl/camera_3d.hpp>
 
@@ -54,6 +52,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		rs.render_tasks.clear();
 		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Map>(engine);
 		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Enemies>(engine);
+		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Towers>(engine);
 		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Projectiles>(engine);
 		rs.addRenderTask<MM::OpenGL::RenderTasks::ImGuiRT>(engine);
 		// TODO: fx_draw
@@ -128,6 +127,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 			);
 		}
 #endif
+#if 0
 		{ // test tower
 			auto e = scene.create();
 			scene.emplace<Components::Target>(e, 2.f);
@@ -136,6 +136,11 @@ static void game_sp_start_fn(MM::Engine& engine) {
 			scene.emplace<Components::TowerCooldown>(e, 1.f, 0.f);
 			auto& tpjs = scene.emplace<Components::TowerProjectileSpawner>(e);
 			//tpjs.pj.damage = 1;
+			scene.emplace<Components::TowerArtType4>(e);
+		}
+#endif
+		{ // test tower
+			Entities::spawn_tower_type2(scene, {5.f, -4.5f});
 		}
 
 		engine.getService<MM::Services::OrganizerSceneService>().changeSceneNow(std::move(new_scene));

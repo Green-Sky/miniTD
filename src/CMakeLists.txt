@@ -56,6 +56,8 @@ add_executable(miniTD1
 	./entities/spawn_group.cpp
 	./entities/projectile.hpp
 	./entities/projectile.cpp
+	./entities/tower.hpp
+	./entities/tower.cpp
 
 	./opengl/render_tasks/map.hpp
 	./opengl/render_tasks/map.cpp
@@ -63,6 +65,8 @@ add_executable(miniTD1
 	./opengl/render_tasks/enemies.cpp
 	./opengl/render_tasks/projectiles.hpp
 	./opengl/render_tasks/projectiles.cpp
+	./opengl/render_tasks/towers.hpp
+	./opengl/render_tasks/towers.cpp
 
 	./main1.cpp
 )

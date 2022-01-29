@@ -1,0 +1,106 @@
+#include "./towers.hpp"
+
+#include <mm/services/scene_service_interface.hpp>
+#include <entt/entity/registry.hpp>
+
+#include <mm/opengl/camera_3d.hpp>
+
+#include "../../components/tower_art.hpp"
+#include <mm/components/position2d.hpp>
+
+namespace mini_td::OpenGL::RenderTasks {
+
+static const float tower_radius = 0.3f;
+
+void Towers::render(MM::Services::OpenGLRenderer& rs, MM::Engine& engine) {
+	auto& scene = engine.getService<MM::Services::SceneServiceInterface>().getScene();
+	//const auto& path = scene.ctx<Components::Path>();
+
+	_fx_draw.setCamera(scene.ctx<MM::OpenGL::Camera3D>());
+
+	rs.targets[target_fbo]->bind(MM::OpenGL::FrameBufferObject::W);
+
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+
+	scene.view<const Components::TowerArtType1, const MM::Components::Position2D>()
+	.each([this](const auto& pos_comp) {
+		draw_tower_type1(pos_comp.pos);
+	});
+	scene.view<const Components::TowerArtType2, const MM::Components::Position2D>()
+	.each([this](const auto& pos_comp) {
+		draw_tower_type2(pos_comp.pos);
+	});
+	scene.view<const Components::TowerArtType3, const MM::Components::Position2D>()
+	.each([this](const auto& pos_comp) {
+		draw_tower_type3(pos_comp.pos);
+	});
+	scene.view<const Components::TowerArtType4, const MM::Components::Position2D>()
+	.each([this](const auto& pos_comp) {
+		draw_tower_type4(pos_comp.pos);
+	});
+
+	_fx_draw.flushTris();
+	_fx_draw.flushLines();
+}
+
+// circle base
+// line inner
+// done
+void Towers::draw_tower_type1(glm::vec2 pos) {
+	glm::vec3 color {
+		0.9f, 0.9f, 0.9f
+	};
+
+	_fx_draw.drawSolidCircle(pos, tower_radius, {color, 0.2f});
+	_fx_draw.drawCircle(pos, tower_radius, {color, 1.f});
+
+	// draw cross
+	_fx_draw.drawLine(pos + glm::vec2{0.f, -tower_radius}, pos + glm::vec2{0.f, tower_radius}, {color, 0.8f});
+	_fx_draw.drawLine(pos + glm::vec2{-tower_radius, 0.f}, pos + glm::vec2{tower_radius, 0.f}, {color, 0.8f});
+}
+
+// circle base
+// circle inner
+// done
+void Towers::draw_tower_type2(glm::vec2 pos) {
+	glm::vec3 color {
+		0.9f, 0.9f, 0.9f
+	};
+
+	_fx_draw.drawSolidCircle(pos, tower_radius, {color, 0.2f});
+	_fx_draw.drawCircle(pos, tower_radius, {color, 1.f});
+	_fx_draw.drawCircle(pos, tower_radius*0.333f, {color, 0.8f});
+}
+
+// rect base
+// circle inner
+// done
+void Towers::draw_tower_type3(glm::vec2 pos) {
+	glm::vec3 color {
+		0.9f, 0.9f, 0.9f
+	};
+
+	_fx_draw.drawSolidCircle(pos, tower_radius, {color, 0.2f}, 4.f);
+	_fx_draw.drawCircle(pos, tower_radius, {color, 1.f}, 4.f);
+	_fx_draw.drawCircle(pos, tower_radius*0.333f, {color, 0.8f});
+}
+
+// rect base
+// line inner
+void Towers::draw_tower_type4(glm::vec2 pos) {
+	glm::vec3 color {
+		0.9f, 0.9f, 0.9f
+	};
+
+	_fx_draw.drawSolidCircle(pos, tower_radius, {color, 0.2f}, 4.f);
+	_fx_draw.drawCircle(pos, tower_radius, {color, 1.f}, 4.f);
+
+	// TODO: this needs to be diff
+	// draw cross
+	_fx_draw.drawLine(pos + glm::vec2{0.f, -tower_radius}, pos + glm::vec2{0.f, tower_radius}, {color, 0.8f});
+	_fx_draw.drawLine(pos + glm::vec2{-tower_radius, 0.f}, pos + glm::vec2{tower_radius, 0.f}, {color, 0.8f});
+}
+
+} // gh4nr::OpenGL::RenderTasks
+
