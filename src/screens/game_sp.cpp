@@ -19,16 +19,23 @@
 #include "../systems/projectile_velocity.hpp"
 #include "../systems/projectile_collision.hpp"
 #include "../systems/damage.hpp"
+#include "../systems/target_first_best.hpp"
+#include "../systems/tower_cooldown.hpp"
+#include "../systems/tower_projectile_spawner.hpp"
 
 #include "../entities/spawn_group.hpp"
 #include "../entities/projectile.hpp"
 
 #include "../components/player_lives.hpp"
 #include "../components/path.hpp"
+#include "../components/target.hpp"
+#include "../components/tower_cooldown.hpp"
+#include "../components/tower_projectile_spawner.hpp"
 
 #include "../opengl/render_tasks/map.hpp"
 #include "../opengl/render_tasks/enemies.hpp"
 #include "../opengl/render_tasks/projectiles.hpp"
+#include "mm/components/position2d.hpp"
 
 #include <mm/opengl/camera_3d.hpp>
 
@@ -90,6 +97,9 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		org.emplace<MM::Systems::simple_positional_velocity>("simple_positional_velocity");
 		org.emplace<Systems::projectile_collision>("projectile_collision");
 		org.emplace<Systems::damage>("damage");
+		org.emplace<Systems::target_first_best>("target_first_best");
+		org.emplace<Systems::tower_cooldown>("tower_cooldown");
+		org.emplace<Systems::tower_projectile_spawner>("tower_projectile_spawner");
 
 #if 0
 		{ // spawn tset enemy
@@ -106,6 +116,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 			Entities::spawn_spawn_group(scene, 1, 40, 0.2f, -24.f);
 		}
 
+#if 0
 		{ // spawn test pj
 			Entities::spawn_projectile(
 				scene,
@@ -115,6 +126,16 @@ static void game_sp_start_fn(MM::Engine& engine) {
 				(0.5f - 0.125f) * glm::two_pi<float>(),
 				0.1f
 			);
+		}
+#endif
+		{ // test tower
+			auto e = scene.create();
+			scene.emplace<Components::Target>(e, 2.f);
+			scene.emplace<Components::TargettingTag_FirstBest>(e);
+			scene.emplace<MM::Components::Position2D>(e, glm::vec2{5.f, -4.5f});
+			scene.emplace<Components::TowerCooldown>(e, 1.f, 0.f);
+			auto& tpjs = scene.emplace<Components::TowerProjectileSpawner>(e);
+			//tpjs.pj.damage = 1;
 		}
 
 		engine.getService<MM::Services::OrganizerSceneService>().changeSceneNow(std::move(new_scene));

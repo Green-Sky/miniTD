@@ -25,6 +25,9 @@ add_executable(miniTD1
 	./components/spawn_group.hpp
 	./components/projectile.hpp
 	./components/damage.hpp
+	./components/target.hpp
+	./components/tower_cooldown.hpp
+	./components/tower_projectile_spawner.hpp
 
 	./systems/successful_enemies.hpp
 	./systems/successful_enemies.cpp
@@ -40,6 +43,12 @@ add_executable(miniTD1
 	./systems/projectile_collision.cpp
 	./systems/damage.hpp
 	./systems/damage.cpp
+	./systems/target_first_best.hpp
+	./systems/target_first_best.cpp
+	./systems/tower_cooldown.hpp
+	./systems/tower_cooldown.cpp
+	./systems/tower_projectile_spawner.hpp
+	./systems/tower_projectile_spawner.cpp
 
 	./entities/enemy.hpp
 	./entities/enemy.cpp

@@ -6,7 +6,8 @@
 
 #include "../components/enemy.hpp"
 #include "../components/damage.hpp"
-#include "glm/geometric.hpp"
+
+#include <glm/geometric.hpp>
 
 namespace mini_td::Systems {
 

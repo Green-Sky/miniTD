@@ -18,6 +18,8 @@ void damage(
 		}
 	});
 
+	scene.remove<Components::Damage>(view.begin(), view.end());
+
 	scene.destroy(to_delete.cbegin(), to_delete.cend());
 }
 
