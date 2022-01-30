@@ -28,6 +28,8 @@ add_executable(miniTD1
 	./components/target.hpp
 	./components/tower_cooldown.hpp
 	./components/tower_projectile_spawner.hpp
+	./components/tower_ray.hpp
+	./components/tower_art.hpp
 
 	./systems/successful_enemies.hpp
 	./systems/successful_enemies.cpp
@@ -53,6 +55,8 @@ add_executable(miniTD1
 	./systems/tower_cooldown.cpp
 	./systems/tower_projectile_spawner.hpp
 	./systems/tower_projectile_spawner.cpp
+	./systems/tower_ray_shooter.hpp
+	./systems/tower_ray_shooter.cpp
 
 	./entities/enemy.hpp
 	./entities/enemy.cpp

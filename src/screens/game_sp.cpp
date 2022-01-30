@@ -24,6 +24,8 @@
 #include "../systems/target_first.hpp"
 #include "../systems/tower_cooldown.hpp"
 #include "../systems/tower_projectile_spawner.hpp"
+#include "../systems/tower_ray_shooter.hpp"
+#include <fx_draw/systems/fx_timer.hpp>
 
 #include "../entities/spawn_group.hpp"
 #include "../entities/projectile.hpp"
@@ -36,6 +38,7 @@
 #include "../opengl/render_tasks/enemies.hpp"
 #include "../opengl/render_tasks/projectiles.hpp"
 #include "../opengl/render_tasks/towers.hpp"
+#include <fx_draw/render_tasks/fx_renderer.hpp>
 
 #include <mm/opengl/camera_3d.hpp>
 
@@ -56,6 +59,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Enemies>(engine);
 		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Towers>(engine);
 		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Projectiles>(engine);
+		rs.addRenderTask<fx_draw::FXDrawRenderTask>(engine);
 		rs.addRenderTask<MM::OpenGL::RenderTasks::ImGuiRT>(engine);
 		// TODO: fx_draw
 	}
@@ -90,6 +94,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		}
 
 		auto& org = scene.set<entt::organizer>();
+		org.emplace<::Systems::fx_draw::FXTimer>("fx_timer");
 		org.emplace<Systems::spawn_group_update>("spawn_group_update");
 		org.emplace<Systems::successful_enemies>("successful_enemies");
 		org.emplace<Systems::progress_enemies>("progress_enemies");
@@ -98,6 +103,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		org.emplace<MM::Systems::simple_positional_velocity>("simple_positional_velocity");
 		org.emplace<Systems::projectile_collision>("projectile_collision");
 		org.emplace<Systems::projectile_bounds_check>("projectile_bounds_check");
+		org.emplace<Systems::tower_ray_shooter>("tower_ray_shooter");
 		org.emplace<Systems::damage>("damage");
 		org.emplace<Systems::target_first_best>("target_first_best");
 		org.emplace<Systems::target_first>("target_first");
@@ -144,7 +150,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		}
 #endif
 		{ // test tower
-			Entities::spawn_tower_type1(scene, {5.f, -4.5f});
+			Entities::spawn_tower_type4(scene, {5.f, -4.5f});
 		}
 
 		engine.getService<MM::Services::OrganizerSceneService>().changeSceneNow(std::move(new_scene));

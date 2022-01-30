@@ -4,6 +4,7 @@
 #include "../components/target.hpp"
 #include "../components/tower_cooldown.hpp"
 #include "../components/tower_projectile_spawner.hpp"
+#include "../components/tower_ray.hpp"
 #include "../components/tower_art.hpp"
 
 #include <entt/entity/registry.hpp>
@@ -64,6 +65,13 @@ void spawn_tower_type2(MM::Scene& scene, glm::vec2 pos) {
 // - heat decay: high
 // - art type: 1
 void spawn_tower_type3(MM::Scene& scene, glm::vec2 pos) {
+	auto e = scene.create();
+	scene.emplace<Components::Target>(e, 1.5f);
+	scene.emplace<Components::TargettingTag_First>(e);
+	scene.emplace<MM::Components::Position2D>(e, pos);
+	scene.emplace<Components::TowerCooldown>(e, 2.5f, 0.f);
+	scene.emplace<Components::TowerRay>(e, 1);
+	scene.emplace<Components::TowerArtType1>(e);
 }
 
 // "X Laser"
@@ -73,6 +81,13 @@ void spawn_tower_type3(MM::Scene& scene, glm::vec2 pos) {
 // - heat decay: low
 // - art type: 4
 void spawn_tower_type4(MM::Scene& scene, glm::vec2 pos) {
+	auto e = scene.create();
+	scene.emplace<Components::Target>(e, 8.f);
+	scene.emplace<Components::TargettingTag_First>(e);
+	scene.emplace<MM::Components::Position2D>(e, pos);
+	scene.emplace<Components::TowerCooldown>(e, 0.2f, 0.f);
+	scene.emplace<Components::TowerRay>(e, 6);
+	scene.emplace<Components::TowerArtType4>(e);
 }
 
 } // mini_td::Entities
