@@ -38,7 +38,7 @@
 #include "../opengl/render_tasks/enemies.hpp"
 #include "../opengl/render_tasks/projectiles.hpp"
 #include "../opengl/render_tasks/towers.hpp"
-#include <fx_draw/render_tasks/fx_renderer.hpp>
+#include <fx_draw/opengl/render_tasks/fx_renderer.hpp>
 
 #include <mm/opengl/camera_3d.hpp>
 
@@ -59,9 +59,8 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Enemies>(engine);
 		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Towers>(engine);
 		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Projectiles>(engine);
-		rs.addRenderTask<fx_draw::FXDrawRenderTask>(engine);
+		rs.addRenderTask<fx_draw::OpenGL::RenderTasks::FXDrawRenderTask>(engine);
 		rs.addRenderTask<MM::OpenGL::RenderTasks::ImGuiRT>(engine);
-		// TODO: fx_draw
 	}
 
 	// TODO: in dire need of a relocation
@@ -94,7 +93,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		}
 
 		auto& org = scene.set<entt::organizer>();
-		org.emplace<::Systems::fx_draw::FXTimer>("fx_timer");
+		org.emplace<fx_draw::Systems::fx_timer>("fx_timer");
 		org.emplace<Systems::spawn_group_update>("spawn_group_update");
 		org.emplace<Systems::successful_enemies>("successful_enemies");
 		org.emplace<Systems::progress_enemies>("progress_enemies");
@@ -150,6 +149,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		}
 #endif
 		{ // test tower
+			Entities::spawn_tower_type1(scene, {5.f, -5.5f});
 			Entities::spawn_tower_type4(scene, {5.f, -4.5f});
 		}
 
