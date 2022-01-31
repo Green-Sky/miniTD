@@ -33,6 +33,7 @@
 
 #include "../components/player_lives.hpp"
 #include "../components/path.hpp"
+#include "../components/money.hpp"
 
 #include "../opengl/render_tasks/map.hpp"
 #include "../opengl/render_tasks/enemies.hpp"
@@ -71,6 +72,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		scene.set<MM::Engine&>(engine);
 
 		scene.set<Components::PlayerLives>(100, 100);
+		scene.set<Components::Money>(0);
 		auto& path = scene.set<Components::Path>();
 		{ // map
 			path.points = {

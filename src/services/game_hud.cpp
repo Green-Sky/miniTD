@@ -4,6 +4,7 @@
 #include <mm/services/scene_service_interface.hpp>
 
 #include "../components/player_lives.hpp"
+#include "../components/money.hpp"
 
 #include "../entities/spawn_group.hpp"
 
@@ -40,7 +41,7 @@ void GameHUD::render(MM::Engine& engine) {
 		game_portion -= ui_portion;
 	}
 
-	// lives
+	// lives and money
 	const float char_width = ImGui::GetFontSize()*0.8f; // guess
 	const float char_count = 8 + 3 + 3;
 	const float lives_window_width_estimate = char_width * char_count;
@@ -48,6 +49,9 @@ void GameHUD::render(MM::Engine& engine) {
 	if (ImGui::Begin("lives", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize)) {
 		const auto& pl = scene.ctx<Components::PlayerLives>();
 		ImGui::Text("lives: %ld/%ld", pl.lives, pl.max);
+
+		const auto& m = scene.ctx<Components::Money>().count;
+		ImGui::Text("money: %ld", m);
 	}
 	ImGui::End();
 

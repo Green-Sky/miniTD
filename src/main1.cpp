@@ -11,6 +11,13 @@
 #include "./services/main_menu.hpp"
 #include "./services/game_hud.hpp"
 
+#include <mm/services/imgui_menu_bar.hpp>
+#include <mm/services/engine_tools.hpp>
+#include <mm/services/opengl_renderer_tools.hpp>
+#include <mm/services/screen_director_tools.hpp>
+#include <mm/services/scene_tools.hpp>
+#include <mm/services/sound_tools.hpp>
+
 #include <entt/entity/registry.hpp>
 
 bool setup_engine(MM::Engine& engine, int argc, char** argv) {
@@ -21,11 +28,12 @@ bool setup_engine(MM::Engine& engine, int argc, char** argv) {
 		MM::Services::OpenGLRenderer,
 
 		MM::Services::ImGuiService,
-		//MM::Services::ImGuiMenuBar,
-		//MM::Services::ImGuiEngineTools,
-		//MM::Services::ImGuiOpenGLRendererTools,
-		//MM::Services::ImGuiScreenDirectorTools,
-		//MM::Services::ImGuiSceneToolsService,
+		MM::Services::ImGuiMenuBar,
+		MM::Services::ImGuiEngineTools,
+		MM::Services::ImGuiOpenGLRendererTools,
+		MM::Services::ImGuiScreenDirectorTools,
+		MM::Services::ImGuiSceneToolsService,
+		//MM::Services::ImGuiSoundTools,
 
 		MM::Services::OrganizerSceneService,
 

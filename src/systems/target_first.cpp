@@ -17,9 +17,12 @@ void target_first(
 	entt::view<entt::get_t<const Components::TargettingTag_First, Components::Target, const MM::Components::Position2D>> view
 ) {
 	// first we sort by progress
-	scene.sort<Components::PathProgress>([](const auto& a, const auto& b) {
-		return a.progress > b.progress;
-	});
+	scene.sort<Components::PathProgress>(
+		[](const auto& a, const auto& b) {
+			return a.progress > b.progress;
+		},
+		entt::insertion_sort{} // we sort every tick, so we can assume its mostly presorted
+	);
 
 	view.each([&scene](Components::Target& t_target, const MM::Components::Position2D& t_pos_comp) {
 		// TODO: reuse last target?

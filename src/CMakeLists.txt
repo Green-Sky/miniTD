@@ -10,6 +10,8 @@ add_executable(miniTD1
 	./screens/main_menu.cpp
 	./screens/game_sp.hpp
 	./screens/game_sp.cpp
+	./screens/debug.hpp
+	./screens/debug.cpp
 
 	./services/main_menu.hpp
 	./services/main_menu.cpp
