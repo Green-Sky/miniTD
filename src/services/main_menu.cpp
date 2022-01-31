@@ -23,8 +23,11 @@ void MainMenu::disable(MM::Engine&) {
 
 void MainMenu::render(MM::Engine& engine) {
 	if (ImGui::Begin("MainMenu")) {
-		if (ImGui::Button("start game")) {
+		if (ImGui::Button("start game hax")) {
 			engine.getService<MM::Services::ScreenDirector>().queueChangeScreenTo("mini_td::Screens::game_sp");
+		}
+
+		if (ImGui::Button("Settings")) {
 		}
 	}
 	ImGui::End();

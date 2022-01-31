@@ -5,12 +5,22 @@
 
 #include "../components/player_lives.hpp"
 #include "../components/money.hpp"
+#include <mm/components/position2d.hpp>
+#include "../components/tower_art.hpp"
+#include "../components/tower_preview.hpp"
+#include "../components/path.hpp"
+#include <mm/opengl/camera_3d.hpp>
 
 #include "../entities/spawn_group.hpp"
+#include "../entities/tower.hpp"
+
+#include <glm/common.hpp>
 
 #include <entt/entity/registry.hpp>
 
 #include <imgui/imgui.h>
+
+#include <mm/logger.hpp>
 
 namespace mini_td::Services {
 
@@ -30,6 +40,9 @@ void GameHUD::disable(MM::Engine&) {
 }
 
 void GameHUD::render(MM::Engine& engine) {
+	// TODO: move somewhere else? own update? a system?
+	updateTowerPreview(engine);
+
 	auto& ssi = engine.getService<MM::Services::SceneServiceInterface>();
 	auto& scene = ssi.getScene();
 
@@ -62,7 +75,29 @@ void GameHUD::render(MM::Engine& engine) {
 		if (ImGui::Begin("toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar)) {
 			if (ImGui::BeginTabBar("tabs")) {
 				if (ImGui::BeginTabItem("Build")) {
-					if (towerButton("##pc", true, false, {60, 60})) {
+					const bool enough_money = scene.ctx<Components::Money>().count >= 100;
+					if (enough_money) {
+						// green-ish
+						//ImGui::PushStyleColor(ImGuiCol_Button, {1.f, 1.f, 1.f, 0.4f});
+						//ImGui::PushStyleColor(ImGuiCol_ButtonActive, {1.f, 1.f, 1.f, 0.4f});
+						//ImGui::PushStyleColor(ImGuiCol_ButtonHovered, {1.f, 1.f, 1.f, 0.4f});
+					} else {
+						// gray-ish
+						const auto disabled_col = ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled);
+						ImGui::PushStyleColor(ImGuiCol_Button, disabled_col);
+						ImGui::PushStyleColor(ImGuiCol_ButtonActive, disabled_col);
+						ImGui::PushStyleColor(ImGuiCol_ButtonHovered, disabled_col);
+					}
+
+					if (towerButton("##pc", true, false, {60, 60}) && enough_money) {
+						if (scene.valid(_tower_placement_preview)) {
+							scene.destroy(_tower_placement_preview);
+						}
+						_tower_placement_preview = scene.create();
+
+						scene.emplace<MM::Components::Position2D>(_tower_placement_preview);
+						auto& tp = scene.emplace<Components::TowerPreview>(_tower_placement_preview);
+						tp.art = 3;
 					}
 					if (ImGui::IsItemHovered()) {
 						ImGui::BeginTooltip();
@@ -85,7 +120,15 @@ void GameHUD::render(MM::Engine& engine) {
 
 					ImGui::SameLine();
 
-					if (towerButton("##nb", false, false, {60, 60})) {
+					if (towerButton("##nb", false, false, {60, 60}) && enough_money) {
+						if (scene.valid(_tower_placement_preview)) {
+							scene.destroy(_tower_placement_preview);
+						}
+						_tower_placement_preview = scene.create();
+
+						scene.emplace<MM::Components::Position2D>(_tower_placement_preview);
+						auto& tp = scene.emplace<Components::TowerPreview>(_tower_placement_preview);
+						tp.art = 2;
 					}
 					if (ImGui::IsItemHovered()) {
 						ImGui::BeginTooltip();
@@ -105,7 +148,15 @@ void GameHUD::render(MM::Engine& engine) {
 					}
 
 
-					if (towerButton("##bl", false, true, {60, 60})) {
+					if (towerButton("##bl", false, true, {60, 60}) && enough_money) {
+						if (scene.valid(_tower_placement_preview)) {
+							scene.destroy(_tower_placement_preview);
+						}
+						_tower_placement_preview = scene.create();
+
+						scene.emplace<MM::Components::Position2D>(_tower_placement_preview);
+						auto& tp = scene.emplace<Components::TowerPreview>(_tower_placement_preview);
+						tp.art = 1;
 					}
 					if (ImGui::IsItemHovered()) {
 						ImGui::BeginTooltip();
@@ -124,7 +175,15 @@ void GameHUD::render(MM::Engine& engine) {
 
 					ImGui::SameLine();
 
-					if (towerButton("##xl", true, true, {60, 60})) {
+					if (towerButton("##xl", true, true, {60, 60}) && enough_money) {
+						if (scene.valid(_tower_placement_preview)) {
+							scene.destroy(_tower_placement_preview);
+						}
+						_tower_placement_preview = scene.create();
+
+						scene.emplace<MM::Components::Position2D>(_tower_placement_preview);
+						auto& tp = scene.emplace<Components::TowerPreview>(_tower_placement_preview);
+						tp.art = 4;
 					}
 					if (ImGui::IsItemHovered()) {
 						ImGui::BeginTooltip();
@@ -141,12 +200,18 @@ void GameHUD::render(MM::Engine& engine) {
 						ImGui::EndTooltip();
 					}
 
+					if (!enough_money) {
+						ImGui::PopStyleColor(3);
+					}
+
 					ImGui::EndTabItem();
 				}
-				if (ImGui::BeginTabItem("Settings")) {
+				if (ImGui::BeginTabItem("Stats")) {
+					ImGui::Text("TODO");
 					ImGui::EndTabItem();
 				}
 				if (ImGui::BeginTabItem("Debug")) {
+					ImGui::InputScalar("money", ImGuiDataType_S64, &scene.ctx<Components::Money>().count);
 					if (ImGui::TreeNode("Spawn SpawnGroup")) {
 						static int64_t level = 1;
 						ImGui::InputScalar("level", ImGuiDataType_S64, &level);
@@ -170,8 +235,98 @@ void GameHUD::render(MM::Engine& engine) {
 	}
 }
 
+// this is hacky
+void GameHUD::updateTowerPreview(MM::Engine& engine) {
+	auto& ssi = engine.getService<MM::Services::SceneServiceInterface>();
+	auto& scene = ssi.getScene();
+
+	if (!scene.valid(_tower_placement_preview)) {
+		return;
+	}
+
+	{ // blink
+		auto& tp = scene.get<Components::TowerPreview>(_tower_placement_preview);
+		//tp.time_accu += 1.f/100.f; // TODO: actual delta
+		tp.time_accu += 1.f/ImGui::GetIO().Framerate; // hack
+		if (tp.time_accu >= 0.4f) {
+			tp.time_accu = 0.f;
+			if (scene.any_of<
+				Components::TowerArtType1,
+				Components::TowerArtType2,
+				Components::TowerArtType3,
+				Components::TowerArtType4
+			>(_tower_placement_preview)) {
+				scene.remove<
+					Components::TowerArtType1,
+					Components::TowerArtType2,
+					Components::TowerArtType3,
+					Components::TowerArtType4
+				>(_tower_placement_preview);
+			} else {
+				// man this is disgusting
+				switch (tp.art) {
+					case 1: scene.emplace<Components::TowerArtType1>(_tower_placement_preview); break;
+					case 2: scene.emplace<Components::TowerArtType2>(_tower_placement_preview); break;
+					case 3: scene.emplace<Components::TowerArtType3>(_tower_placement_preview); break;
+					case 4: scene.emplace<Components::TowerArtType4>(_tower_placement_preview); break;
+					default: SPDLOG_ERROR("eh, invalid art {}", tp.art);
+				}
+			}
+		}
+	}
+
+	{ // update position
+		auto& e_pos = scene.get<MM::Components::Position2D>(_tower_placement_preview);
+		const auto& cam = scene.ctx<MM::OpenGL::Camera3D>();
+
+		const auto mouse_pos = ImGui::GetMousePos();
+		const auto window_size = ImGui::GetIO().DisplaySize;
+
+		// TODO: implement with glm::unProject ?
+		// TODO: add to mm cam
+		// get screen cords in NDC space [-1, 1]
+		const glm::vec4 screen {
+			(
+				glm::vec2{mouse_pos.x, window_size.y - mouse_pos.y}
+				/ (glm::vec2{window_size.x, window_size.y} * 0.5f)
+			)
+			- glm::vec2{1.f, 1.f}
+			, 1.f, 1.f
+		};
+		const glm::mat4 inv_vp = glm::inverse(cam.getViewProjection());
+		const glm::vec4 world = inv_vp * screen;
+
+		// set and clamp into world
+		const auto& world_extent = scene.ctx<Components::Path>().extents;
+		//e_pos.pos = glm::clamp(glm::vec2{world.x, world.y}, {0, 0}, world_extent);
+		e_pos.pos.x = glm::clamp(world.x, 0.f, world_extent.x);
+		e_pos.pos.y = glm::clamp(world.y, world_extent.y, 0.f); // <.<
+	}
+
+	{ // place
+		if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
+			SPDLOG_ERROR("the click");
+
+			const auto& pos = scene.get<MM::Components::Position2D>(_tower_placement_preview).pos;
+			const auto& tp = scene.get<Components::TowerPreview>(_tower_placement_preview);
+			// this is a real hack
+			switch (tp.art) {
+				case 1: Entities::spawn_tower_type3(scene, pos); break;
+				case 2: Entities::spawn_tower_type2(scene, pos); break;
+				case 3: Entities::spawn_tower_type1(scene, pos); break;
+				case 4: Entities::spawn_tower_type4(scene, pos); break;
+				default: SPDLOG_ERROR("eh, invalid type {}", tp.art);
+			}
+
+			scene.destroy(_tower_placement_preview);
+
+			scene.ctx<Components::Money>().count -= 100;
+		}
+	}
+}
+
 // TODO: rendering is a hack
-void GameHUD::drawTower(bool outer, bool inner, const ImVec2& size, const ImVec2& pos) {
+void GameHUD::drawTower(bool outer, bool inner, const ImVec2& size, const ImVec2& pos) const {
 	auto* dl = ImGui::GetWindowDrawList();
 	//const auto& cp = ImGui::GetCursorScreenPos();
 
@@ -225,7 +380,7 @@ void GameHUD::drawTower(bool outer, bool inner, const ImVec2& size, const ImVec2
 	);
 }
 
-bool GameHUD::towerButton(const char* title, bool outer, bool inner, const ImVec2& size) {
+bool GameHUD::towerButton(const char* title, bool outer, bool inner, const ImVec2& size) const {
 	const auto cp = ImGui::GetCursorScreenPos();
 	const bool pressed = ImGui::Button(title, size);
 	drawTower(outer, inner, size, cp);

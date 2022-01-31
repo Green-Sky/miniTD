@@ -1,6 +1,9 @@
 #pragma once
 
+#include <mm/engine_fwd.hpp>
 #include <mm/services/service.hpp>
+
+#include <entt/entity/entity.hpp>
 
 // fwd
 struct ImVec2;
@@ -18,10 +21,14 @@ class GameHUD : public MM::Services::Service {
 		void render(MM::Engine& engine);
 
 		// true = rect
-		void drawTower(bool outer, bool inner, const ImVec2& size, const ImVec2& pos);
-		bool towerButton(const char* title, bool outer, bool inner, const ImVec2& size);
+		void drawTower(bool outer, bool inner, const ImVec2& size, const ImVec2& pos) const;
+		bool towerButton(const char* title, bool outer, bool inner, const ImVec2& size) const ;
+
+		void updateTowerPreview(MM::Engine& engine);
 
 		bool _toolbar {true};
+
+		entt::entity _tower_placement_preview {entt::null};
 };
 
 } // mini_td::Services

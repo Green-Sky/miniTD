@@ -32,6 +32,7 @@ add_executable(miniTD1
 	./components/tower_projectile_spawner.hpp
 	./components/tower_ray.hpp
 	./components/tower_art.hpp
+	./components/tower_preview.hpp
 
 	./systems/successful_enemies.hpp
 	./systems/successful_enemies.cpp
