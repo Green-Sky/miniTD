@@ -82,8 +82,9 @@ static void game_sp_start_fn(MM::Engine& engine) {
 				{10.f, 5.f},
 			};
 			path.extents = {10.f, 10.f};
-			path.updateValues();
-			SPDLOG_INFO("path length: {}", path.total_length);
+
+			auto& path_util = scene.set<Components::PathUtil>(path);
+			SPDLOG_INFO("path length: {}", path_util.total_length);
 		}
 
 		{ // cam
@@ -111,13 +112,6 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		org.emplace<Systems::tower_cooldown>("tower_cooldown");
 		org.emplace<Systems::tower_projectile_spawner>("tower_projectile_spawner");
 
-#if 0
-		{ // spawn tset enemy
-			for (size_t i = 0; i < 9; i++) {
-				Entities::spawn_enemy(scene, i + 1, -0.1f*i);
-			}
-		}
-#endif
 		{ // spawn groups test
 			Entities::spawn_spawn_group(scene, 1, 16, 1.3f);
 
@@ -126,18 +120,6 @@ static void game_sp_start_fn(MM::Engine& engine) {
 			Entities::spawn_spawn_group(scene, 1, 40, 0.2f, -24.f);
 		}
 
-#if 0
-		{ // spawn test pj
-			Entities::spawn_projectile(
-				scene,
-				0.5f,
-				3,
-				{5,-5},
-				(0.5f - 0.125f) * glm::two_pi<float>(),
-				0.1f
-			);
-		}
-#endif
 #if 0
 		{ // test tower
 			auto e = scene.create();

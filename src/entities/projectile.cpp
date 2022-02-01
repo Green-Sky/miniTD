@@ -8,8 +8,6 @@
 #include <mm/components/view_dir2d.hpp>
 #include <mm/components/velocity2d_position.hpp>
 
-#include <glm/trigonometric.hpp>
-
 namespace mini_td::Entities {
 
 void create_projectile(MM::Scene& scene, MM::Entity e, float radius, int64_t damage, glm::vec2 pos, float dir, float velocity) {

@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include <nlohmann/json.hpp>
+
 namespace mini_td::Components {
 
 struct SpawnGroup {
@@ -13,6 +15,9 @@ struct SpawnGroup {
 
 	float time_accu {0.f}; // accumulated time
 };
+
+// spawned_count is intenal?
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(SpawnGroup, level, count, interval, time_accu)
 
 } // mini_td::Components
 

@@ -10,7 +10,8 @@ namespace mini_td::Systems {
 
 void progress_to_position(
 	entt::view<entt::get_t<MM::Components::Position2D, const Components::PathProgress>> view,
-	const Components::Path& path
+	const Components::Path& path,
+	const Components::PathUtil& path_util
 );
 
 } // mini_td::Systems
