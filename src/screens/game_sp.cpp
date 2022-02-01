@@ -25,6 +25,7 @@
 #include "../systems/tower_cooldown.hpp"
 #include "../systems/tower_projectile_spawner.hpp"
 #include "../systems/tower_ray_shooter.hpp"
+#include "../systems/wave_logic.hpp"
 #include <fx_draw/systems/fx_timer.hpp>
 
 #include "../entities/spawn_group.hpp"
@@ -34,6 +35,8 @@
 #include "../components/player_lives.hpp"
 #include "../components/path.hpp"
 #include "../components/money.hpp"
+#include "../components/spawn_schedule.hpp"
+#include "../components/wave.hpp"
 
 #include "../opengl/render_tasks/map.hpp"
 #include "../opengl/render_tasks/enemies.hpp"
@@ -95,8 +98,18 @@ static void game_sp_start_fn(MM::Engine& engine) {
 			cam.updateView();
 		}
 
+		auto& wave = scene.set<Components::Wave>();
+		wave.wave = 1;
+		wave.start = true;
+		wave.auto_proceed = true;
+		{ // ss
+			// load from file
+			scene.set<Components::SpawnSchedule>();
+		}
+
 		auto& org = scene.set<entt::organizer>();
 		org.emplace<fx_draw::Systems::fx_timer>("fx_timer");
+		org.emplace<Systems::wave_logic>("wave_logic");
 		org.emplace<Systems::spawn_group_update>("spawn_group_update");
 		org.emplace<Systems::successful_enemies>("successful_enemies");
 		org.emplace<Systems::progress_enemies>("progress_enemies");
@@ -112,6 +125,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		org.emplace<Systems::tower_cooldown>("tower_cooldown");
 		org.emplace<Systems::tower_projectile_spawner>("tower_projectile_spawner");
 
+#if 0
 		{ // spawn groups test
 			Entities::spawn_spawn_group(scene, 1, 16, 1.3f);
 
@@ -119,6 +133,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 
 			Entities::spawn_spawn_group(scene, 1, 40, 0.2f, -24.f);
 		}
+#endif
 
 #if 0
 		{ // test tower

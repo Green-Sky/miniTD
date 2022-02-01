@@ -25,6 +25,8 @@ add_executable(miniTD1
 	./components/path.cpp
 	./components/wave.hpp
 	./components/spawn_group.hpp
+	./components/spawn_schedule.hpp
+	./components/spawn_schedule.cpp
 	./components/projectile.hpp
 	./components/damage.hpp
 	./components/target.hpp
@@ -60,6 +62,8 @@ add_executable(miniTD1
 	./systems/tower_projectile_spawner.cpp
 	./systems/tower_ray_shooter.hpp
 	./systems/tower_ray_shooter.cpp
+	./systems/wave_logic.hpp
+	./systems/wave_logic.cpp
 
 	./entities/enemy.hpp
 	./entities/enemy.cpp
@@ -110,4 +114,15 @@ if(EMSCRIPTEN)
 	set_target_properties(miniTD1 PROPERTIES LINK_FLAGS "-flto -s USE_SDL=2 -s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2 -s FULL_ES2=1 -s FULL_ES3=1 -s ALLOW_MEMORY_GROWTH=1")
 endif()
 
+########################################
 
+add_executable(generate_spawn_schedule
+	./components/spawn_group.hpp
+
+	./generate_spawn_schedule.cpp
+)
+
+target_link_libraries(generate_spawn_schedule PUBLIC
+	common_components_serialize_json
+	engine # engine_fwd.hpp
+)

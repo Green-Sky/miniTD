@@ -11,9 +11,9 @@ struct SpawnGroup {
 	int64_t count {1};
 	float interval {1.f}; // per sec
 
-	int64_t spawned_count {0};
-
 	float time_accu {0.f}; // accumulated time
+
+	int64_t spawned_count {0};
 };
 
 // spawned_count is intenal?
