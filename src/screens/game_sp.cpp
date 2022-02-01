@@ -76,12 +76,12 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		auto& path = scene.set<Components::Path>();
 		{ // map
 			path.points = {
-				{0.f, -5.f},
-				{2.5f, -2.5f},
-				{7.5f, -7.5f},
-				{10.f, -5.f},
+				{0.f, 5.f},
+				{2.5f, 2.5f},
+				{7.5f, 7.5f},
+				{10.f, 5.f},
 			};
-			path.extents = {10.f, -10.f};
+			path.extents = {10.f, 10.f};
 			path.updateValues();
 			SPDLOG_INFO("path length: {}", path.total_length);
 		}
@@ -89,7 +89,7 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		{ // cam
 			auto& cam = scene.set<MM::OpenGL::Camera3D>();
 			cam.translation = glm::vec3(path.extents/2.f, 0.f);
-			cam.horizontalViewPortSize = glm::max(path.extents.x, glm::abs(path.extents.y)) * cam.screenRatio;
+			cam.horizontalViewPortSize = glm::max(path.extents.x, path.extents.y) * cam.screenRatio;
 			cam.setOrthographic();
 			cam.updateView();
 		}
@@ -151,8 +151,8 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		}
 #endif
 		{ // test tower
-			Entities::spawn_tower_type1(scene, {5.f, -5.5f});
-			Entities::spawn_tower_type4(scene, {5.f, -4.5f});
+			Entities::spawn_tower_type1(scene, {5.f, 5.5f});
+			Entities::spawn_tower_type4(scene, {5.f, 4.5f});
 		}
 
 		engine.getService<MM::Services::OrganizerSceneService>().changeSceneNow(std::move(new_scene));

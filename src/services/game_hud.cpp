@@ -293,14 +293,11 @@ void GameHUD::updateTowerPreview(MM::Engine& engine) {
 			- glm::vec2{1.f, 1.f}
 			, 1.f, 1.f
 		};
-		const glm::mat4 inv_vp = glm::inverse(cam.getViewProjection());
-		const glm::vec4 world = inv_vp * screen;
+		const glm::vec4 world = cam.screenToWorld(screen);
 
 		// set and clamp into world
 		const auto& world_extent = scene.ctx<Components::Path>().extents;
-		//e_pos.pos = glm::clamp(glm::vec2{world.x, world.y}, {0, 0}, world_extent);
-		e_pos.pos.x = glm::clamp(world.x, 0.f, world_extent.x);
-		e_pos.pos.y = glm::clamp(world.y, world_extent.y, 0.f); // <.<
+		e_pos.pos = glm::clamp(glm::vec2{world.x, world.y}, {0, 0}, world_extent);
 	}
 
 	{ // place

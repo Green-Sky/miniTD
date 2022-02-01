@@ -11,10 +11,9 @@ void projectile_bounds_check(
 ) {
 	std::vector<entt::entity> to_delete {};
 	view.each([&to_delete, &path](const auto e, const auto&, const auto& pos_comp) {
-		// TODO: fix this messy negative bounds thingy
 		if (
-			pos_comp.pos.x < 0.f || pos_comp.pos.y > 0.f ||
-			pos_comp.pos.x > path.extents.x || pos_comp.pos.y < path.extents.y
+			pos_comp.pos.x < 0.f || pos_comp.pos.y < 0.f ||
+			pos_comp.pos.x > path.extents.x || pos_comp.pos.y > path.extents.y
 		) {
 			to_delete.push_back(e);
 		}
