@@ -18,6 +18,12 @@ add_executable(miniTD1
 	./services/game_hud.hpp
 	./services/game_hud.cpp
 
+	./mission.hpp
+	./mission.cpp
+
+	./game_scene.hpp
+	./game_scene.cpp
+
 	./components/enemy.hpp
 	./components/path_progress.hpp
 	./components/player_lives.hpp
