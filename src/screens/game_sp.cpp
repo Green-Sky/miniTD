@@ -103,8 +103,81 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		wave.start = true;
 		wave.auto_proceed = true;
 		{ // ss
-			// load from file
-			scene.set<Components::SpawnSchedule>();
+			// TODO: load from file
+			scene.set<Components::SpawnSchedule>() = nlohmann::json::parse(
+R"j({
+  "schedule": [
+    [
+      1,
+      [
+        {
+          "count": 32,
+          "interval": 2.0,
+          "level": 1,
+          "time_accu": 0.0
+        }
+      ]
+    ],
+    [
+      2,
+      [
+        {
+          "count": 48,
+          "interval": 1.5,
+          "level": 1,
+          "time_accu": 0.0
+        }
+      ]
+    ],
+    [
+      3,
+      [
+        {
+          "count": 32,
+          "interval": 1.5,
+          "level": 1,
+          "time_accu": 0.0
+        },
+        {
+          "count": 8,
+          "interval": 3.0,
+          "level": 2,
+          "time_accu": -6.0
+        }
+      ]
+    ],
+    [
+      4,
+      [
+        {
+          "count": 32,
+          "interval": 1.5,
+          "level": 1,
+          "time_accu": 0.0
+        },
+        {
+          "count": 16,
+          "interval": 0.699999988079071,
+          "level": 1,
+          "time_accu": 0.0
+        },
+        {
+          "count": 8,
+          "interval": 2.0,
+          "level": 2,
+          "time_accu": -6.0
+        },
+        {
+          "count": 8,
+          "interval": 2.0,
+          "level": 2,
+          "time_accu": -32.0
+        }
+      ]
+    ]
+  ]
+}
+)j");
 		}
 
 		auto& org = scene.set<entt::organizer>();

@@ -3,6 +3,7 @@
 //#include <mm/services/screen_director.hpp>
 #include <mm/services/scene_service_interface.hpp>
 
+#include "../components/wave.hpp"
 #include "../components/player_lives.hpp"
 #include "../components/money.hpp"
 #include <mm/components/position2d.hpp>
@@ -60,6 +61,9 @@ void GameHUD::render(MM::Engine& engine) {
 	const float lives_window_width_estimate = char_width * char_count;
 	ImGui::SetNextWindowPos({display_w*game_portion*0.5f - lives_window_width_estimate*0.5f, 0});
 	if (ImGui::Begin("lives", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize)) {
+		const auto& w = scene.ctx<Components::Wave>().wave;
+		ImGui::Text("wave: %ld", w);
+
 		const auto& pl = scene.ctx<Components::PlayerLives>();
 		ImGui::Text("lives: %ld/%ld", pl.lives, pl.max);
 
@@ -316,6 +320,7 @@ void GameHUD::updateTowerPreview(MM::Engine& engine) {
 			}
 
 			scene.destroy(_tower_placement_preview);
+			_tower_placement_preview = entt::null;
 
 			scene.ctx<Components::Money>().count -= 100;
 		}
