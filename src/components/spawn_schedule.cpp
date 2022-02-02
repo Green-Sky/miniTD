@@ -36,7 +36,7 @@ void SpawnSchedule::spawnWave(MM::Scene& scene, uint64_t wave) const {
 			if (count != 0) {
 				// TODO: timing
 				SPDLOG_INFO("spawn_group: l:{} c:{}, tokens_left:{}", level, count, tokens);
-				Entities::spawn_spawn_group(scene, level, count, 1.f, rng.zeroToOne() * wave);
+				Entities::spawn_spawn_group(scene, level, count, 1.f, -rng.zeroToOne() * wave);
 				prev_no_spawn = false;
 			} else { // warn
 				if (prev_no_spawn) {

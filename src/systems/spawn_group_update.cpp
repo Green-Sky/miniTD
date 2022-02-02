@@ -19,11 +19,13 @@ void spawn_group_update(
 			sg.time_accu -= sg.interval;
 
 			sg.spawned_count++;
-			if (sg.spawned_count >= sg.count) {
-				to_delete.push_back(e);
-			}
 
 			Entities::spawn_enemy(scene, sg.level, 0.f);
+
+			if (sg.spawned_count >= sg.count) {
+				to_delete.push_back(e);
+				break;
+			}
 		}
 	});
 
