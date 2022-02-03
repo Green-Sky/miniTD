@@ -2,6 +2,8 @@
 
 #include <mm/services/service.hpp>
 
+#include "../mission.hpp"
+
 namespace mini_td::Services {
 
 class MainMenu : public MM::Services::Service {
@@ -13,6 +15,11 @@ class MainMenu : public MM::Services::Service {
 
 	private: // tasks
 		void render(MM::Engine& engine);
+		void renderMainMenu(MM::Engine& engine);
+		void renderMissions(MM::Engine& engine);
+
+	private: // mission
+		std::vector<Mission1> _missions {};
 };
 
 } // mini_td::Services

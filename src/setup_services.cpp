@@ -8,9 +8,10 @@
 template<>
 bool setup_service<MM::Services::FilesystemService>(MM::Engine& engine, [[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
 	engine.addService<MM::Services::FilesystemService>(argv[0], "miniTD", true, true
-//#ifndef NDEBUG
-		//,std::vector<std::tuple<std::string, std::string, bool>>{{"some_path_to_data?/", "/", true}}
-//#endif
+#ifndef NDEBUG
+		// hack for local machine
+		,std::vector<std::tuple<std::string, std::string, bool>>{{"../res/", "/", true}}
+#endif
 	);
 
 	// enable by default

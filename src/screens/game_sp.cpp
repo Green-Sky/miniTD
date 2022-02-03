@@ -20,7 +20,6 @@
 #include <fx_draw/opengl/render_tasks/fx_renderer.hpp>
 
 #include "../game_scene.hpp"
-#include "nlohmann/json_fwd.hpp"
 
 #include <mm/opengl/camera_3d.hpp>
 
