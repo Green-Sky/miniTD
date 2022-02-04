@@ -13,6 +13,7 @@ namespace mini_td::Systems {
 void wave_logic(
 	entt::registry& scene,
 	Components::Wave& wave,
+	Components::Money& money,
 	const Components::SpawnSchedule& ss,
 	const MM::Components::TimeDelta& td
 ) {
@@ -40,6 +41,11 @@ void wave_logic(
 	}
 
 	// if we got here, nothings alive
+	if (wave.active) { // previous tick, there was still activity
+		// we just finished the wave
+		money.count += wave.money_per_completed_wave;
+	}
+
 	wave.active = false;
 	wave.start = wave.auto_proceed;
 	wave.wave++;

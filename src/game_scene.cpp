@@ -72,6 +72,7 @@ std::unique_ptr<MM::Scene> create_game_scene(MM::Engine& engine, const Mission1&
 	wave.wave = 1;
 	wave.start = true;
 	wave.auto_proceed = true;
+	wave.money_per_completed_wave = mission.money_per_wave;
 	{ // ss
 		// TODO: load from file
 		mission.spawn_schedule_file_path;
