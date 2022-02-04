@@ -17,9 +17,17 @@ class MainMenu : public MM::Services::Service {
 		void render(MM::Engine& engine);
 		void renderMainMenu(MM::Engine& engine);
 		void renderMissions(MM::Engine& engine);
+		void renderSettings(MM::Engine& engine);
 
 	private: // mission
 		std::vector<Mission1> _missions {};
+
+		enum class State {
+			MAIN_MENU,
+			MISSIONS,
+			SETTINGS
+		};
+		State _state {State::MAIN_MENU};
 };
 
 } // mini_td::Services

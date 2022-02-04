@@ -45,14 +45,8 @@ static void game_sp_start_fn(MM::Engine& engine) {
 	}
 
 	{ // scene setup
-		//Mission1 mission {};
-		////mission.map_file_path = "/maps/inverse_saw.json";
-		//mission.map_file_path = "/maps/triton_snake.json";
-		//SPDLOG_INFO("mission j: {}", nlohmann::json(mission).dump(2));
-		Mission1 mission = load_mission1(engine, "/missions/triton_snake_endless.json");
-		std::unique_ptr<MM::Scene> new_scene = create_game_scene(engine, mission);
-		auto& scene = *new_scene;
-
+		// TODO: do this in game hud
+		auto& scene = engine.getService<MM::Services::OrganizerSceneService>().getScene();
 		{ // cam
 			const auto& path = scene.ctx<Components::Path>();
 			auto& cam = scene.set<MM::OpenGL::Camera3D>();
@@ -61,15 +55,6 @@ static void game_sp_start_fn(MM::Engine& engine) {
 			cam.setOrthographic();
 			cam.updateView();
 		}
-
-#if 0
-		{ // test tower
-			Entities::spawn_tower_type1(scene, {5.f, 5.5f});
-			Entities::spawn_tower_type4(scene, {5.f, 4.5f});
-		}
-#endif
-
-		engine.getService<MM::Services::OrganizerSceneService>().changeSceneNow(std::move(new_scene));
 	}
 }
 

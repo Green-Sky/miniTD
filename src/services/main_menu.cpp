@@ -2,12 +2,27 @@
 
 #include <mm/services/screen_director.hpp>
 #include <mm/services/filesystem.hpp>
+#include <mm/services/organizer_scene.hpp>
+
+#include "../game_scene.hpp"
+
+#include <entt/entity/registry.hpp>
 
 #include <imgui/imgui.h>
 
 #include <mm/logger.hpp>
 
 namespace mini_td::Services {
+
+static bool MyButton(const char* title) {
+	return ImGui::Button(title, ImVec2(0, 25));
+}
+
+constexpr auto menu_window_flags =
+	ImGuiWindowFlags_AlwaysAutoResize |
+	ImGuiWindowFlags_NoCollapse
+	//ImGuiWindowFlags_NoMove
+;
 
 bool MainMenu::enable(MM::Engine& engine, std::vector<MM::UpdateStrategies::TaskInfo>& task_array) {
 	// setup tasks
@@ -25,6 +40,8 @@ bool MainMenu::enable(MM::Engine& engine, std::vector<MM::UpdateStrategies::Task
 		SPDLOG_ERROR("missing missions folder {}", missions_folder);
 		return false;
 	}
+
+	_missions.clear();
 
 	std::vector<std::string> mission_files {};
 	fs.forEachIn(missions_folder.c_str(), [&mission_files, &missions_folder](const char* file_path) -> bool {
@@ -52,32 +69,81 @@ void MainMenu::disable(MM::Engine&) {
 }
 
 void MainMenu::render(MM::Engine& engine) {
-	if (false) {
-		renderMainMenu(engine);
-	} else {
-		renderMissions(engine);
+	switch (_state) {
+		case State::MAIN_MENU:
+			renderMainMenu(engine);
+			break;
+		case State::MISSIONS:
+			renderMissions(engine);
+			break;
+		case State::SETTINGS:
+			renderSettings(engine);
+			break;
 	}
 }
 
 void MainMenu::renderMainMenu(MM::Engine& engine) {
-	if (ImGui::Begin("MainMenu")) {
-		if (ImGui::Button("start game hax")) {
-			engine.getService<MM::Services::ScreenDirector>().queueChangeScreenTo("mini_td::Screens::game_sp");
+	if (ImGui::Begin("MainMenu", nullptr, menu_window_flags)) {
+		if (MyButton("Play!")) {
+			_state = State::MISSIONS;
 		}
 
-		if (ImGui::Button("Settings")) {
+		if (MyButton("Settings")) {
+			_state = State::SETTINGS;
 		}
+
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.65, 0.15, 0.15, 1));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.8, 0.3, 0.3, 1));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1, 0.2, 0.2, 1));
+		if (MyButton("Quit")) {
+			engine.stop();
+		}
+		ImGui::PopStyleColor(3);
 	}
 	ImGui::End();
 }
 
 void MainMenu::renderMissions(MM::Engine& engine) {
-	if (ImGui::Begin("Missions")) {
+	if (ImGui::Begin("Missions", nullptr, menu_window_flags)) {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.65, 0.15, 0.15, 1));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.8, 0.3, 0.3, 1));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1, 0.2, 0.2, 1));
+		if (MyButton("<- Back")) {
+			_state = State::MAIN_MENU;
+		}
+		ImGui::PopStyleColor(3);
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
 		for (const auto& mission : _missions) {
-			if (ImGui::Button(mission.title.c_str())) {
+			if (MyButton(mission.title.c_str())) {
+				engine.getService<MM::Services::OrganizerSceneService>().changeSceneNow(create_game_scene(engine, mission));
 				engine.getService<MM::Services::ScreenDirector>().queueChangeScreenTo("mini_td::Screens::game_sp");
 			}
 		}
+	}
+	ImGui::End();
+}
+
+void MainMenu::renderSettings(MM::Engine& engine) {
+	if (ImGui::Begin("Settings", nullptr, menu_window_flags)) {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.65, 0.15, 0.15, 1));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.8, 0.3, 0.3, 1));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1, 0.2, 0.2, 1));
+		if (MyButton("<- Back")) {
+			_state = State::MAIN_MENU;
+		}
+		ImGui::PopStyleColor(3);
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		ImGui::Text("TODO");
 	}
 	ImGui::End();
 }

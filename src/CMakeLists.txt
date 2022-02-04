@@ -117,7 +117,7 @@ target_link_libraries(miniTD1 PUBLIC
 if(EMSCRIPTEN)
 	set_target_properties(miniTD1 PROPERTIES COMPILE_FLAGS "-s USE_SDL=2")
 
-	set_target_properties(miniTD1 PROPERTIES LINK_FLAGS "-flto -s USE_SDL=2 -s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2 -s FULL_ES2=1 -s FULL_ES3=1 -s ALLOW_MEMORY_GROWTH=1")
+	set_target_properties(miniTD1 PROPERTIES LINK_FLAGS "-flto -s USE_SDL=2 -s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2 -s FULL_ES2=1 -s FULL_ES3=1 -s ALLOW_MEMORY_GROWTH=1 --preload-file ${CMAKE_CURRENT_SOURCE_DIR}/../res@/")
 endif()
 
 ########################################
