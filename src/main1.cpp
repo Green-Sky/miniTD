@@ -4,6 +4,7 @@
 
 #include "./setup_services.hpp"
 
+#include <mm/services/sound_service.hpp>
 #include <mm/services/opengl_renderer.hpp>
 #include <mm/services/screen_director.hpp>
 #include <mm/services/imgui_s.hpp>
@@ -25,6 +26,8 @@ bool setup_engine(MM::Engine& engine, int argc, char** argv) {
 		MM::Services::SDLService, // enabled by default
 		MM::Services::FilesystemService, // enabled by default
 
+		MM::Services::SoundService,
+
 		MM::Services::OpenGLRenderer,
 
 		MM::Services::ImGuiService,
@@ -33,7 +36,7 @@ bool setup_engine(MM::Engine& engine, int argc, char** argv) {
 		MM::Services::ImGuiOpenGLRendererTools,
 		MM::Services::ImGuiScreenDirectorTools,
 		MM::Services::ImGuiSceneToolsService,
-		//MM::Services::ImGuiSoundTools,
+		MM::Services::ImGuiSoundTools,
 
 		MM::Services::OrganizerSceneService,
 

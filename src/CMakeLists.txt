@@ -100,7 +100,10 @@ target_link_libraries(miniTD1 PUBLIC
 	imgui_render_task
 	#simple_rect_render_task
 
+	sound_service
+
 	imgui_tools
+	imgui_sound
 	imgui_opengl_renderer_tools
 
 	random

@@ -7,6 +7,7 @@
 #include <mm/services/scene_tools.hpp>
 #include <mm/services/screen_director.hpp>
 #include <mm/services/screen_director_tools.hpp>
+#include <mm/services/sound_tools.hpp>
 
 #include <mm/opengl/render_tasks/imgui.hpp>
 
@@ -23,6 +24,7 @@ void create_enable_debug(MM::Engine& engine, MM::Services::ScreenDirector::Scree
 	screen.start_enable.push_back(engine.type<MM::Services::ImGuiOpenGLRendererTools>());
 	screen.start_enable.push_back(engine.type<MM::Services::ImGuiScreenDirectorTools>());
 	screen.start_enable.push_back(engine.type<MM::Services::ImGuiSceneToolsService>());
+	screen.start_enable.push_back(engine.type<MM::Services::ImGuiSoundTools>());
 
 	// start disable
 	//screen.start_disable.push_back();
