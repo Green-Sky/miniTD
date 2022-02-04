@@ -69,86 +69,16 @@ std::unique_ptr<MM::Scene> create_game_scene(MM::Engine& engine, const Mission1&
 #endif
 
 	auto& wave = scene.set<Components::Wave>();
-	wave.wave = 1;
+	wave.wave = mission.starting_wave > 0 ? mission.starting_wave : 0;
+	// TODO: different logic for endless vs normal mode
 	wave.start = true;
 	wave.auto_proceed = true;
 	wave.money_per_completed_wave = mission.money_per_wave;
-	{ // ss
-		// TODO: load from file
-		mission.spawn_schedule_file_path;
-		scene.set<Components::SpawnSchedule>() = nlohmann::json::parse(
-R"j({
-  "schedule": [
-    [
-      1,
-      [
-        {
-          "count": 32,
-          "interval": 2.0,
-          "level": 1,
-          "time_accu": 0.0
-        }
-      ]
-    ],
-    [
-      2,
-      [
-        {
-          "count": 48,
-          "interval": 1.5,
-          "level": 1,
-          "time_accu": 0.0
-        }
-      ]
-    ],
-    [
-      3,
-      [
-        {
-          "count": 32,
-          "interval": 1.5,
-          "level": 1,
-          "time_accu": 0.0
-        },
-        {
-          "count": 8,
-          "interval": 3.0,
-          "level": 2,
-          "time_accu": -6.0
-        }
-      ]
-    ],
-    [
-      4,
-      [
-        {
-          "count": 32,
-          "interval": 1.5,
-          "level": 1,
-          "time_accu": 0.0
-        },
-        {
-          "count": 16,
-          "interval": 0.699999988079071,
-          "level": 1,
-          "time_accu": 0.0
-        },
-        {
-          "count": 8,
-          "interval": 2.0,
-          "level": 2,
-          "time_accu": -6.0
-        },
-        {
-          "count": 8,
-          "interval": 2.0,
-          "level": 2,
-          "time_accu": -32.0
-        }
-      ]
-    ]
-  ]
-})j");
+	// ss
+	if (fs.isFile(mission.spawn_schedule_file_path.c_str())) {
+		scene.set<Components::SpawnSchedule>() = fs.readJson(mission.spawn_schedule_file_path.c_str());
+	} else {
+		SPDLOG_ERROR("spawn schedule file not found '{}'", mission.spawn_schedule_file_path);
 	}
 
 	auto& org = scene.set<entt::organizer>();
