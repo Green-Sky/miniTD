@@ -101,6 +101,7 @@ target_link_libraries(miniTD1 PUBLIC
 	#simple_rect_render_task
 
 	sound_service
+	filesystem_soloud_file
 
 	imgui_tools
 	imgui_sound
