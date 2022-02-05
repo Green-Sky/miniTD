@@ -74,10 +74,17 @@ static void game_sp_start_fn(MM::Engine& engine) {
 	}
 
 	{ // load sound
+		using namespace entt::literals;
 		auto& rm = MM::ResourceManager<SoLoud::Sfxr>::ref();
-		//rm.load<SoundLoaderSfxrJson>("damage", nlohmann::json());
-		//rm.load<SoundLoaderSfxrPreset>("damage", SoLoud::Sfxr::SFXR_PRESETS::BLIP, 0);
-		rm.load<SoundLoaderSfxrPreset>("damage", SoLoud::Sfxr::SFXR_PRESETS::BLIP, 1);
+		{ // damage (an enemy)
+			//rm.load<SoundLoaderSfxrJson>("damage", nlohmann::json());
+			//rm.load<SoundLoaderSfxrPreset>("damage", SoLoud::Sfxr::SFXR_PRESETS::BLIP, 0);
+			rm.load<SoundLoaderSfxrPreset>("damage", SoLoud::Sfxr::SFXR_PRESETS::BLIP, 1);
+		}
+		{ // hurt (player loses lives)
+			rm.load<SoundLoaderSfxrPreset>("hurt", SoLoud::Sfxr::SFXR_PRESETS::HURT, 3);
+			rm.get("hurt"_hs)->mParams.master_vol = 0.3f;
+		}
 	}
 
 	{ // scene setup

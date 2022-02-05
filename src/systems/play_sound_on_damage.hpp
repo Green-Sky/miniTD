@@ -2,7 +2,7 @@
 
 #include <entt/fwd.hpp>
 
-#include <mm/engine.hpp>
+#include <mm/engine_fwd.hpp>
 
 #include "../components/damage.hpp"
 
