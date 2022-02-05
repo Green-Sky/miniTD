@@ -70,6 +70,8 @@ add_executable(miniTD1
 	./systems/tower_ray_shooter.cpp
 	./systems/wave_logic.hpp
 	./systems/wave_logic.cpp
+	./systems/play_sound_on_damage.hpp
+	./systems/play_sound_on_damage.cpp
 
 	./entities/enemy.hpp
 	./entities/enemy.cpp

@@ -51,7 +51,7 @@ static void main_menu_start_fn(MM::Engine& engine) {
 				wave.setVolume(0.f);
 				wave.setLooping(true);
 				auto handle = s_e.playBackground(wave, -1.f, true);
-				s_e.fadeVolume(handle, 1.f, 2.f);
+				s_e.fadeVolume(handle, 0.5f, 2.f);
 				s_e.setPause(handle, false);
 			}
 		}
