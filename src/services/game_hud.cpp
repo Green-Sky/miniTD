@@ -11,11 +11,15 @@
 #include "../components/tower_preview.hpp"
 #include "../components/path.hpp"
 #include <mm/opengl/camera_3d.hpp>
+#include "../components/camera_trauma.hpp"
+#include "../components/game_constants.hpp"
 
 #include "../entities/spawn_group.hpp"
 #include "../entities/tower.hpp"
 
 #include <glm/common.hpp>
+
+#include <squirrel_noise/SmoothNoise.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -25,11 +29,11 @@
 
 namespace mini_td::Services {
 
-bool GameHUD::enable(MM::Engine& engine, std::vector<MM::UpdateStrategies::TaskInfo>& task_array) {
+bool GameHUD::enable(MM::Engine&, std::vector<MM::UpdateStrategies::TaskInfo>& task_array) {
 	// setup tasks
 	task_array.push_back(
-		MM::UpdateStrategies::TaskInfo{"GameHUD::render"}
-		.fn([this](MM::Engine& e){ render(e); })
+		MM::UpdateStrategies::TaskInfo{"GameHUD::update"}
+		.fn([this](MM::Engine& e){ update(e); })
 		.phase(MM::UpdateStrategies::update_phase_t::PRE)
 		.succeed("ImGuiService::new_frame")
 	);
@@ -40,7 +44,7 @@ bool GameHUD::enable(MM::Engine& engine, std::vector<MM::UpdateStrategies::TaskI
 void GameHUD::disable(MM::Engine&) {
 }
 
-void GameHUD::render(MM::Engine& engine) {
+void GameHUD::update(MM::Engine& engine) {
 	// TODO: move somewhere else? own update? a system?
 	updateTowerPreview(engine);
 
@@ -54,6 +58,8 @@ void GameHUD::render(MM::Engine& engine) {
 	if (_toolbar) { // ui open
 		game_portion -= ui_portion;
 	}
+
+	updateCamera(scene, ui_portion);
 
 	// lives and money
 	const float char_width = ImGui::GetFontSize()*0.8f; // guess
@@ -237,6 +243,44 @@ void GameHUD::render(MM::Engine& engine) {
 		}
 		ImGui::End();
 	}
+}
+
+void GameHUD::updateCamera(MM::Scene& scene, float fractional_offset) {
+	const auto& path = scene.ctx<Components::Path>();
+	auto& cam = scene.ctx<MM::OpenGL::Camera3D>();
+
+	// center cam on map and
+	// offset pos by fraction of width
+	cam.translation = glm::vec3{
+		path.extents.x * (0.5f + fractional_offset),
+		path.extents.y * 0.5f,
+		0.f
+	};
+
+	// fit map
+	cam.horizontalViewPortSize = glm::max(path.extents.x, path.extents.y) * cam.screenRatio;
+
+	// apply screen shake
+	const auto& trauma = scene.ctx<Components::CameraTrauma>().trauma;
+	//const auto& trauma = 1.f;
+	const float trauma_squared = trauma * trauma;
+
+	// HACK
+	static float time = 0.f;
+	time += 1.f/144.f;
+
+	const auto& gc = scene.ctx<Components::GameConstants>();
+	const float scale = 0.25f; // noise scale // TODO: expose to gc?
+
+	cam.roll = gc.camera_shake_max_angle * trauma_squared * SquirrelNoise4::Compute1dPerlinNoise(time, scale, 2u, 0.7f, 2.f, true, 103u);
+
+	cam.translation.x += gc.camera_shake_max_offset * cam.horizontalViewPortSize * trauma_squared * SquirrelNoise4::Compute1dPerlinNoise(time, scale, 2u, 0.7f, 2.f, true, 1021u);
+	cam.translation.y += gc.camera_shake_max_offset * cam.horizontalViewPortSize * trauma_squared * SquirrelNoise4::Compute1dPerlinNoise(time, scale, 2u, 0.7f, 2.f, true, 3533u);
+
+
+	// update
+	cam.setOrthographic();
+	cam.updateView();
 }
 
 // this is hacky

@@ -6,6 +6,8 @@
 #include <mm/resource_manager.hpp>
 #include <soloud_sfxr.h>
 
+#include <glm/common.hpp>
+
 #include <mm/logger.hpp>
 
 namespace mini_td::Systems {
@@ -15,6 +17,7 @@ void successful_enemies(
 	entt::registry& scene,
 	entt::view<entt::get_t<const Components::PathProgress, const Components::Enemy>> view,
 	Components::PlayerLives& player_lives,
+	Components::CameraTrauma& camera_trauma,
 	MM::Engine& engine
 ) {
 	std::vector<entt::entity> to_remove {};
@@ -46,8 +49,9 @@ void successful_enemies(
 			s_e.play(*s, 1.0f);
 		}
 
-		// TODO: screen shake
 		//const float lives_lost_relative = float(lives_lost) / player_lives.max;
+		//camera_trauma.trauma = glm::clamp(camera_trauma.trauma + lives_lost_relative * 5.f, 0.1f, 1.f);
+		camera_trauma.trauma = glm::clamp(camera_trauma.trauma + 0.5f, 0.f, 1.f);
 	}
 }
 

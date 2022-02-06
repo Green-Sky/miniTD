@@ -18,7 +18,9 @@ class GameHUD : public MM::Services::Service {
 		void disable(MM::Engine& engine) override;
 
 	private: // tasks
-		void render(MM::Engine& engine);
+		void update(MM::Engine& engine);
+
+		void updateCamera(MM::Scene& scene, float fractional_offset);
 
 		// true = rect
 		void drawTower(bool outer, bool inner, const ImVec2& size, const ImVec2& pos) const;

@@ -86,19 +86,6 @@ static void game_sp_start_fn(MM::Engine& engine) {
 			rm.get("hurt"_hs)->mParams.master_vol = 0.3f;
 		}
 	}
-
-	{ // scene setup
-		// TODO: do this in game hud
-		auto& scene = engine.getService<MM::Services::OrganizerSceneService>().getScene();
-		{ // cam
-			const auto& path = scene.ctx<Components::Path>();
-			auto& cam = scene.set<MM::OpenGL::Camera3D>();
-			cam.translation = glm::vec3(path.extents/2.f, 0.f);
-			cam.horizontalViewPortSize = glm::max(path.extents.x, path.extents.y) * cam.screenRatio;
-			cam.setOrthographic();
-			cam.updateView();
-		}
-	}
 }
 
 void create_game_sp(MM::Engine& engine, MM::Services::ScreenDirector::Screen& screen) {

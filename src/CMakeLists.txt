@@ -24,6 +24,7 @@ add_executable(miniTD1
 	./game_scene.hpp
 	./game_scene.cpp
 
+	./components/game_constants.hpp
 	./components/enemy.hpp
 	./components/path_progress.hpp
 	./components/player_lives.hpp
@@ -41,6 +42,7 @@ add_executable(miniTD1
 	./components/tower_ray.hpp
 	./components/tower_art.hpp
 	./components/tower_preview.hpp
+	./components/camera_trauma.hpp
 
 	./systems/successful_enemies.hpp
 	./systems/successful_enemies.cpp
@@ -72,6 +74,8 @@ add_executable(miniTD1
 	./systems/wave_logic.cpp
 	./systems/play_sound_on_damage.hpp
 	./systems/play_sound_on_damage.cpp
+	./systems/camera_trauma_update.hpp
+	./systems/camera_trauma_update.cpp
 
 	./entities/enemy.hpp
 	./entities/enemy.cpp

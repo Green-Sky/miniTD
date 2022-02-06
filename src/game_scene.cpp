@@ -6,9 +6,13 @@
 #include <entt/entity/registry.hpp>
 #include <entt/entity/organizer.hpp>
 
+#include <mm/opengl/camera_3d.hpp>
+
+#include "./components/game_constants.hpp"
 #include "./components/player_lives.hpp"
 #include "./components/money.hpp"
 #include "./components/path.hpp"
+#include "./components/camera_trauma.hpp"
 
 // systems
 #include <mm/systems/simple_velocity_system2d.hpp>
@@ -27,6 +31,7 @@
 #include "./systems/tower_ray_shooter.hpp"
 #include "./systems/wave_logic.hpp"
 #include "./systems/play_sound_on_damage.hpp"
+#include "./systems/camera_trauma_update.hpp"
 #include <fx_draw/systems/fx_timer.hpp>
 
 
@@ -40,6 +45,8 @@ std::unique_ptr<MM::Scene> create_game_scene(MM::Engine& engine, const Mission1&
 	auto& scene = *new_scene;
 
 	scene.set<MM::Engine&>(engine);
+
+	scene.set<Components::GameConstants>();
 
 	scene.set<Components::PlayerLives>(mission.starting_lives, mission.starting_lives);
 	scene.set<Components::Money>(mission.starting_money);
@@ -67,6 +74,9 @@ std::unique_ptr<MM::Scene> create_game_scene(MM::Engine& engine, const Mission1&
 		cam.setOrthographic();
 		cam.updateView();
 	}
+#else
+	scene.set<MM::OpenGL::Camera3D>();
+	scene.set<Components::CameraTrauma>();
 #endif
 
 	auto& wave = scene.set<Components::Wave>();
@@ -83,6 +93,7 @@ std::unique_ptr<MM::Scene> create_game_scene(MM::Engine& engine, const Mission1&
 	}
 
 	auto& org = scene.set<entt::organizer>();
+	org.emplace<Systems::camera_trauma_update>("camera_trauma_update");
 	org.emplace<fx_draw::Systems::fx_timer>("fx_timer");
 	org.emplace<Systems::wave_logic>("wave_logic");
 	org.emplace<Systems::spawn_group_update>("spawn_group_update");

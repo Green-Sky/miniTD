@@ -7,6 +7,7 @@
 #include "../components/enemy.hpp"
 #include "../components/path_progress.hpp"
 #include "../components/player_lives.hpp"
+#include "../components/camera_trauma.hpp"
 
 namespace mini_td::Systems {
 
@@ -15,6 +16,7 @@ void successful_enemies(
 	entt::registry& scene,
 	entt::view<entt::get_t<const Components::PathProgress, const Components::Enemy>> view,
 	Components::PlayerLives& player_lives,
+	Components::CameraTrauma& camera_trauma,
 	MM::Engine& engine
 );
 
