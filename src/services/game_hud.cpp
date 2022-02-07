@@ -38,6 +38,9 @@ bool GameHUD::enable(MM::Engine&, std::vector<MM::UpdateStrategies::TaskInfo>& t
 		.succeed("ImGuiService::new_frame")
 	);
 
+	_last_time = clock::now();
+	_screen_shake_time = 0.f;
+
 	return true;
 }
 
@@ -45,6 +48,8 @@ void GameHUD::disable(MM::Engine&) {
 }
 
 void GameHUD::update(MM::Engine& engine) {
+	updateTimer();
+
 	// TODO: move somewhere else? own update? a system?
 	updateTowerPreview(engine);
 
@@ -245,6 +250,14 @@ void GameHUD::update(MM::Engine& engine) {
 	}
 }
 
+void GameHUD::updateTimer(void) {
+	auto newNow = clock::now();
+	std::chrono::duration<double, std::ratio<1, 1>> deltaTime = newNow - _last_time;
+	_last_time = newNow;
+
+	_delta = deltaTime.count();
+}
+
 void GameHUD::updateCamera(MM::Scene& scene, float fractional_offset) {
 	const auto& path = scene.ctx<Components::Path>();
 	auto& cam = scene.ctx<MM::OpenGL::Camera3D>();
@@ -266,16 +279,15 @@ void GameHUD::updateCamera(MM::Scene& scene, float fractional_offset) {
 	const float trauma_squared = trauma * trauma;
 
 	// HACK
-	static float time = 0.f;
-	time += 1.f/144.f;
+	_screen_shake_time += _delta;
 
 	const auto& gc = scene.ctx<Components::GameConstants>();
 	const float scale = 0.25f; // noise scale // TODO: expose to gc?
 
-	cam.roll = gc.camera_shake_max_angle * trauma_squared * SquirrelNoise4::Compute1dPerlinNoise(time, scale, 2u, 0.7f, 2.f, true, 103u);
+	cam.roll = gc.camera_shake_max_angle * trauma_squared * SquirrelNoise4::Compute1dPerlinNoise(_screen_shake_time, scale, 2u, 0.7f, 2.f, true, 103u);
 
-	cam.translation.x += gc.camera_shake_max_offset * cam.horizontalViewPortSize * trauma_squared * SquirrelNoise4::Compute1dPerlinNoise(time, scale, 2u, 0.7f, 2.f, true, 1021u);
-	cam.translation.y += gc.camera_shake_max_offset * cam.horizontalViewPortSize * trauma_squared * SquirrelNoise4::Compute1dPerlinNoise(time, scale, 2u, 0.7f, 2.f, true, 3533u);
+	cam.translation.x += gc.camera_shake_max_offset * cam.horizontalViewPortSize * trauma_squared * SquirrelNoise4::Compute1dPerlinNoise(_screen_shake_time, scale, 2u, 0.7f, 2.f, true, 1021u);
+	cam.translation.y += gc.camera_shake_max_offset * cam.horizontalViewPortSize * trauma_squared * SquirrelNoise4::Compute1dPerlinNoise(_screen_shake_time, scale, 2u, 0.7f, 2.f, true, 3533u);
 
 
 	// update
@@ -294,8 +306,7 @@ void GameHUD::updateTowerPreview(MM::Engine& engine) {
 
 	{ // blink
 		auto& tp = scene.get<Components::TowerPreview>(_tower_placement_preview);
-		//tp.time_accu += 1.f/100.f; // TODO: actual delta
-		tp.time_accu += 1.f/ImGui::GetIO().Framerate; // hack
+		tp.time_accu += _delta;
 		if (tp.time_accu >= 0.4f) {
 			tp.time_accu = 0.f;
 			if (scene.any_of<
@@ -331,7 +342,6 @@ void GameHUD::updateTowerPreview(MM::Engine& engine) {
 		const auto window_size = ImGui::GetIO().DisplaySize;
 
 		// TODO: implement with glm::unProject ?
-		// TODO: add to mm cam
 		// get screen cords in NDC space [-1, 1]
 		const glm::vec4 screen {
 			(

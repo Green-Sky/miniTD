@@ -5,6 +5,8 @@
 
 #include <entt/entity/entity.hpp>
 
+#include <chrono>
+
 // fwd
 struct ImVec2;
 
@@ -20,6 +22,8 @@ class GameHUD : public MM::Services::Service {
 	private: // tasks
 		void update(MM::Engine& engine);
 
+		void updateTimer(void);
+
 		void updateCamera(MM::Scene& scene, float fractional_offset);
 
 		// true = rect
@@ -31,6 +35,13 @@ class GameHUD : public MM::Services::Service {
 		bool _toolbar {true};
 
 		entt::entity _tower_placement_preview {entt::null};
+
+		using clock = std::chrono::high_resolution_clock;
+		std::chrono::time_point<clock> _last_time;
+
+		float _delta {0.f};
+
+		float _screen_shake_time {0.f};
 };
 
 } // mini_td::Services
