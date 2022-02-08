@@ -27,7 +27,7 @@ void tower_projectile_spawner(
 			const auto& target_pos = scene.get<MM::Components::Position2D>(t_target.e).pos;
 			const glm::vec2 target_vec = target_pos - t_pos_comp.pos;
 
-			// we assume lenth is not 0
+			// we assume length is not 0
 
 			const float dir = glm::atan(target_vec.y, target_vec.x);
 

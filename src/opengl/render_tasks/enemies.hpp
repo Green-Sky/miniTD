@@ -19,7 +19,7 @@ class Enemies : public MM::OpenGL::RenderTask {
 		void render(MM::Services::OpenGLRenderer& rs, MM::Engine& engine) override;
 
 	private:
-		void draw_enemy(glm::vec2 pos, int64_t level);
+		void draw_enemy(glm::vec2 pos, int64_t level, float radius);
 
 	public:
 		std::string target_fbo = "display";

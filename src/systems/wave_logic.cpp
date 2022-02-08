@@ -44,6 +44,7 @@ void wave_logic(
 	if (wave.active) { // previous tick, there was still activity
 		// we just finished the wave
 		money.count += wave.money_per_completed_wave;
+		// TODO: check for final wave and trigger win screen
 	}
 
 	wave.active = false;

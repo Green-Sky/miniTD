@@ -15,14 +15,14 @@ namespace mini_td::Systems {
 // O(n * m) lel
 void projectile_collision(
 	entt::registry& scene,
-	entt::view<entt::get_t<Components::Projectile, const MM::Components::Position2D>> view
+	entt::view<entt::get_t<Components::Projectile, const MM::Components::Position2D>> view,
+	const Components::GameConstants& gc
 ) {
 	std::vector<MM::Entity> to_delete {}; // pj
-	view.each([&scene, &to_delete](const MM::Entity e_pj, Components::Projectile& pj, const MM::Components::Position2D& pj_pos_comp) {
+	view.each([&scene, &to_delete, &gc](const MM::Entity e_pj, Components::Projectile& pj, const MM::Components::Position2D& pj_pos_comp) {
 		for (const auto& [e_e, enemy, e_pos_comp] : scene.view<const Components::Enemy, const MM::Components::Position2D>().each()) {
 			const float dist = glm::distance(pj_pos_comp.pos, e_pos_comp.pos);
-			const float enemy_radius = 0.1f;
-			const float radius_sum = pj.radius + enemy_radius;
+			const float radius_sum = pj.radius + gc.enemy_radius;
 			if (dist <= radius_sum) {
 				// hit something
 				auto& enemy_dmg = scene.get_or_emplace<Components::Damage>(e_e).damage;

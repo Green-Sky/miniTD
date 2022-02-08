@@ -66,18 +66,8 @@ std::unique_ptr<MM::Scene> create_game_scene(MM::Engine& engine, const Mission1&
 		SPDLOG_INFO("path length: {}", path_util.total_length);
 	}
 
-#if 0
-	{ // cam
-		auto& cam = scene.set<MM::OpenGL::Camera3D>();
-		cam.translation = glm::vec3(path.extents/2.f, 0.f);
-		cam.horizontalViewPortSize = glm::max(path.extents.x, path.extents.y) * cam.screenRatio;
-		cam.setOrthographic();
-		cam.updateView();
-	}
-#else
 	scene.set<MM::OpenGL::Camera3D>();
 	scene.set<Components::CameraTrauma>();
-#endif
 
 	auto& wave = scene.set<Components::Wave>();
 	wave.wave = mission.starting_wave > 0 ? mission.starting_wave : 0;

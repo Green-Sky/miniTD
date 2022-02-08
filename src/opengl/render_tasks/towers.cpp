@@ -5,16 +5,15 @@
 
 #include <mm/opengl/camera_3d.hpp>
 
+#include "../../components/game_constants.hpp"
 #include "../../components/tower_art.hpp"
 #include <mm/components/position2d.hpp>
 
 namespace mini_td::OpenGL::RenderTasks {
 
-static const float tower_radius = 0.3f;
-
 void Towers::render(MM::Services::OpenGLRenderer& rs, MM::Engine& engine) {
 	auto& scene = engine.getService<MM::Services::SceneServiceInterface>().getScene();
-	//const auto& path = scene.ctx<Components::Path>();
+	const auto& gc = scene.ctx<Components::GameConstants>();
 
 	_fx_draw.setCamera(scene.ctx<MM::OpenGL::Camera3D>());
 
@@ -24,20 +23,20 @@ void Towers::render(MM::Services::OpenGLRenderer& rs, MM::Engine& engine) {
 	glEnable(GL_BLEND);
 
 	scene.view<const Components::TowerArtType1, const MM::Components::Position2D>()
-	.each([this](const auto& pos_comp) {
-		draw_tower_type1(pos_comp.pos);
+	.each([this, &gc](const auto& pos_comp) {
+		draw_tower_type1(pos_comp.pos, gc.tower_radius);
 	});
 	scene.view<const Components::TowerArtType2, const MM::Components::Position2D>()
-	.each([this](const auto& pos_comp) {
-		draw_tower_type2(pos_comp.pos);
+	.each([this, &gc](const auto& pos_comp) {
+		draw_tower_type2(pos_comp.pos, gc.tower_radius);
 	});
 	scene.view<const Components::TowerArtType3, const MM::Components::Position2D>()
-	.each([this](const auto& pos_comp) {
-		draw_tower_type3(pos_comp.pos);
+	.each([this, &gc](const auto& pos_comp) {
+		draw_tower_type3(pos_comp.pos, gc.tower_radius);
 	});
 	scene.view<const Components::TowerArtType4, const MM::Components::Position2D>()
-	.each([this](const auto& pos_comp) {
-		draw_tower_type4(pos_comp.pos);
+	.each([this, &gc](const auto& pos_comp) {
+		draw_tower_type4(pos_comp.pos, gc.tower_radius);
 	});
 
 	_fx_draw.flushTris();
@@ -47,7 +46,7 @@ void Towers::render(MM::Services::OpenGLRenderer& rs, MM::Engine& engine) {
 // circle base
 // line inner
 // done
-void Towers::draw_tower_type1(glm::vec2 pos) {
+void Towers::draw_tower_type1(glm::vec2 pos, float tower_radius) {
 	glm::vec3 color {
 		0.9f, 0.9f, 0.9f
 	};
@@ -63,7 +62,7 @@ void Towers::draw_tower_type1(glm::vec2 pos) {
 // circle base
 // circle inner
 // done
-void Towers::draw_tower_type2(glm::vec2 pos) {
+void Towers::draw_tower_type2(glm::vec2 pos, float tower_radius) {
 	glm::vec3 color {
 		0.9f, 0.9f, 0.9f
 	};
@@ -76,7 +75,7 @@ void Towers::draw_tower_type2(glm::vec2 pos) {
 // rect base
 // circle inner
 // done
-void Towers::draw_tower_type3(glm::vec2 pos) {
+void Towers::draw_tower_type3(glm::vec2 pos, float tower_radius) {
 	glm::vec3 color {
 		0.9f, 0.9f, 0.9f
 	};
@@ -88,7 +87,7 @@ void Towers::draw_tower_type3(glm::vec2 pos) {
 
 // rect base
 // line inner
-void Towers::draw_tower_type4(glm::vec2 pos) {
+void Towers::draw_tower_type4(glm::vec2 pos, float tower_radius) {
 	glm::vec3 color {
 		0.9f, 0.9f, 0.9f
 	};

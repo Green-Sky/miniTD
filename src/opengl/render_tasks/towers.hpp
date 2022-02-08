@@ -19,10 +19,10 @@ class Towers : public MM::OpenGL::RenderTask {
 		void render(MM::Services::OpenGLRenderer& rs, MM::Engine& engine) override;
 
 	private:
-		void draw_tower_type1(glm::vec2 pos);
-		void draw_tower_type2(glm::vec2 pos);
-		void draw_tower_type3(glm::vec2 pos);
-		void draw_tower_type4(glm::vec2 pos);
+		void draw_tower_type1(glm::vec2 pos, float tower_radius);
+		void draw_tower_type2(glm::vec2 pos, float tower_radius);
+		void draw_tower_type3(glm::vec2 pos, float tower_radius);
+		void draw_tower_type4(glm::vec2 pos, float tower_radius);
 
 	public:
 		std::string target_fbo = "display";
