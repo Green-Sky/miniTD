@@ -144,6 +144,10 @@ void MainMenu::renderSettings(MM::Engine& engine) {
 		ImGui::Spacing();
 
 		ImGui::Text("TODO");
+
+		if (ImGui::Button("enable debug")) {
+			engine.getService<MM::Services::ScreenDirector>().queueChangeScreenTo("mini_td::Screens::enable_debug");
+		}
 	}
 	ImGui::End();
 }

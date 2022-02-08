@@ -52,9 +52,11 @@ void create_enable_debug(MM::Engine& engine, MM::Services::ScreenDirector::Scree
 			}
 		}
 
+#if 0
 		{ // hide menu bar
 			_engine.getService<MM::Services::ImGuiMenuBar>().show_menu_bar = false;
 		}
+#endif
 
 		_engine.getService<MM::Services::ScreenDirector>().queueChangeScreenTo(next_screen);
 	};

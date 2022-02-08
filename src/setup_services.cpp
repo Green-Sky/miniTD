@@ -64,8 +64,11 @@ bool setup_service<MM::Services::ScreenDirector>(MM::Engine& engine, [[maybe_unu
 	);
 
 	// queue the inital screen before enable
+#if NDEBUG
+	sd.queueChangeScreenTo("MM::Screens::mm_logo"); // if release
+#else
 	sd.queueChangeScreenTo("mini_td::Screens::enable_debug"); // if debug
-	//sd.queueChangeScreenTo("MM::Screens::mm_logo"); // if release
+#endif
 	//sd.queueChangeScreenTo("mini_td::Screens::main_menu");
 
 	// enable by default, starts first screen
