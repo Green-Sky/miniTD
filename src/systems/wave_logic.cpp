@@ -21,7 +21,9 @@ void wave_logic(
 	const Components::SpawnSchedule& ss,
 	const MM::Components::TimeDelta& td
 ) {
-	wave.time_into_wave += td.tickDelta;
+	if (wave.active) {
+		wave.time_into_wave += td.tickDelta;
+	}
 
 	if (wave.start) {
 		SPDLOG_INFO("staring wave {}", wave.wave);
@@ -48,17 +50,18 @@ void wave_logic(
 	if (wave.active) { // previous tick, there was still activity
 		// we just finished the wave
 		money.count += wave.money_per_completed_wave;
-		// TODO: check for final wave and trigger win screen
-	}
 
-	wave.active = false;
-	wave.start = wave.auto_proceed;
-	wave.wave++;
+		wave.active = false;
+		wave.start = wave.auto_proceed;
+		wave.wave++;
 
-	if (wave.final_wave >= 0 && wave.wave > wave.final_wave) {
-		// you won
-		// TODO: diff win and fail
-		engine.getService<MM::Services::ScreenDirector>().queueChangeScreenTo("mini_td::Screens::end_screen");
+		if (wave.final_wave >= 0 && wave.wave > wave.final_wave) {
+			// you won
+			// TODO: diff win and fail
+			engine.getService<MM::Services::ScreenDirector>().queueChangeScreenTo("mini_td::Screens::end_screen");
+		}
+	} else {
+		wave.start = wave.auto_proceed;
 	}
 }
 
