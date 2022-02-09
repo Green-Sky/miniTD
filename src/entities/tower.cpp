@@ -30,7 +30,7 @@ void spawn_tower_type1(MM::Scene& scene, glm::vec2 pos) {
 	scene.emplace<MM::Components::Position2D>(e, pos);
 	scene.emplace<Components::TowerCooldown>(e, 1.3f, 0.f);
 	auto& tpjs = scene.emplace<Components::TowerProjectileSpawner>(e);
-	tpjs.pj.radius = 0.05f;
+	tpjs.pj.radius = 0.1f;
 	tpjs.pj.velocity = 3.f;
 	tpjs.pj.damage = 1;
 	scene.emplace<Components::TowerArtType3>(e);
@@ -51,7 +51,7 @@ void spawn_tower_type2(MM::Scene& scene, glm::vec2 pos) {
 	scene.emplace<MM::Components::Position2D>(e, pos);
 	scene.emplace<Components::TowerCooldown>(e, 0.3f, 0.f);
 	auto& tpjs = scene.emplace<Components::TowerProjectileSpawner>(e);
-	tpjs.pj.radius = 0.2f;
+	tpjs.pj.radius = 0.3f;
 	tpjs.pj.velocity = 0.9f;
 	tpjs.pj.damage = 7;
 	scene.emplace<Components::TowerArtType2>(e);
