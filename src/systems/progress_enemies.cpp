@@ -15,11 +15,11 @@ void progress_enemies(
 		// TODO: extract
 		// TODO: version is bad
 		if (enemy.level >= 1 && enemy.level <= 3) {
-			speed = 0.5f + 0.1f * (enemy.level - 1);
+			speed = 1.0f + 0.2f * (enemy.level - 1);
 		} else if (enemy.level <= 6) {
-			speed = 0.9f + 0.2f * (enemy.level - 4);
+			speed = 1.4f + 0.3f * (enemy.level - 4);
 		} else {
-			speed = 0.2f * enemy.level;
+			speed = 0.3f * enemy.level;
 		}
 
 		const float progress_speed = (speed / path_length) * delta;
