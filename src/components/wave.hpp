@@ -6,6 +6,7 @@ namespace mini_td::Components {
 
 struct Wave {
 	int64_t wave {0};
+	int64_t final_wave {-1}; // negative for endless
 
 	bool start {false}; // set this to true to start this->wave wave
 	bool active {false}; // indicator

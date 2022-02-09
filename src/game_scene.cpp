@@ -71,9 +71,10 @@ std::unique_ptr<MM::Scene> create_game_scene(MM::Engine& engine, const Mission1&
 
 	auto& wave = scene.set<Components::Wave>();
 	wave.wave = mission.starting_wave > 0 ? mission.starting_wave : 0;
+	wave.final_wave = mission.final_wave;
 	// TODO: different logic for endless vs normal mode
 	wave.start = true;
-	wave.auto_proceed = true;
+	wave.auto_proceed = true; // TODO: off by default
 	wave.money_per_completed_wave = mission.money_per_wave;
 	// ss
 	if (fs.isFile(mission.spawn_schedule_file_path.c_str())) {

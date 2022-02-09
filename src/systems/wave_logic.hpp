@@ -1,6 +1,6 @@
 #pragma once
 
-#include <entt/fwd.hpp>
+#include <mm/engine_fwd.hpp>
 
 #include "../components/wave.hpp"
 #include "../components/money.hpp"
@@ -14,6 +14,7 @@ void wave_logic(
 	entt::registry& scene,
 	Components::Wave& wave,
 	Components::Money& money,
+	MM::Engine& engine,
 	const Components::SpawnSchedule& ss,
 	const MM::Components::TimeDelta& td
 );

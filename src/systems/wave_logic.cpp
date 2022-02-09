@@ -1,5 +1,8 @@
 #include "./wave_logic.hpp"
 
+#include <mm/engine.hpp>
+#include <mm/services/screen_director.hpp>
+
 #include <entt/entity/registry.hpp>
 
 // for empty checks
@@ -14,6 +17,7 @@ void wave_logic(
 	entt::registry& scene,
 	Components::Wave& wave,
 	Components::Money& money,
+	MM::Engine& engine,
 	const Components::SpawnSchedule& ss,
 	const MM::Components::TimeDelta& td
 ) {
@@ -50,6 +54,12 @@ void wave_logic(
 	wave.active = false;
 	wave.start = wave.auto_proceed;
 	wave.wave++;
+
+	if (wave.final_wave >= 0 && wave.wave > wave.final_wave) {
+		// you won
+		// TODO: diff win and fail
+		engine.getService<MM::Services::ScreenDirector>().queueChangeScreenTo("mini_td::Screens::end_screen");
+	}
 }
 
 } // mini_td::Systems

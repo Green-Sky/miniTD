@@ -61,7 +61,6 @@ bool MainMenu::enable(MM::Engine& engine, std::vector<MM::UpdateStrategies::Task
 		}
 	}
 
-
 	return true;
 }
 
@@ -69,7 +68,7 @@ void MainMenu::disable(MM::Engine&) {
 }
 
 void MainMenu::render(MM::Engine& engine) {
-	switch (_state) {
+	switch (state) {
 		case State::MAIN_MENU:
 			renderMainMenu(engine);
 			break;
@@ -79,17 +78,20 @@ void MainMenu::render(MM::Engine& engine) {
 		case State::SETTINGS:
 			renderSettings(engine);
 			break;
+		case State::END_SCREEN:
+			renderEndScreen(engine);
+			break;
 	}
 }
 
 void MainMenu::renderMainMenu(MM::Engine& engine) {
 	if (ImGui::Begin("MainMenu", nullptr, menu_window_flags)) {
 		if (MyButton("Play!")) {
-			_state = State::MISSIONS;
+			state = State::MISSIONS;
 		}
 
 		if (MyButton("Settings")) {
-			_state = State::SETTINGS;
+			state = State::SETTINGS;
 		}
 
 		ImGui::Spacing();
@@ -113,7 +115,7 @@ void MainMenu::renderMissions(MM::Engine& engine) {
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.8, 0.3, 0.3, 1));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1, 0.2, 0.2, 1));
 		if (MyButton("<- Back")) {
-			_state = State::MAIN_MENU;
+			state = State::MAIN_MENU;
 		}
 		ImGui::PopStyleColor(3);
 		ImGui::Spacing();
@@ -136,7 +138,7 @@ void MainMenu::renderSettings(MM::Engine& engine) {
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.8, 0.3, 0.3, 1));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1, 0.2, 0.2, 1));
 		if (MyButton("<- Back")) {
-			_state = State::MAIN_MENU;
+			state = State::MAIN_MENU;
 		}
 		ImGui::PopStyleColor(3);
 		ImGui::Spacing();
@@ -148,6 +150,26 @@ void MainMenu::renderSettings(MM::Engine& engine) {
 		if (ImGui::Button("enable debug")) {
 			engine.getService<MM::Services::ScreenDirector>().queueChangeScreenTo("mini_td::Screens::enable_debug");
 		}
+	}
+	ImGui::End();
+}
+
+void MainMenu::renderEndScreen(MM::Engine& engine) {
+	if (ImGui::Begin("End", nullptr, menu_window_flags)) {
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.65, 0.15, 0.15, 1));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.8, 0.3, 0.3, 1));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1, 0.2, 0.2, 1));
+		if (MyButton("<- Back to Main Menu")) {
+			state = State::MAIN_MENU;
+			// this is weird, but works
+			engine.getService<MM::Services::ScreenDirector>().queueChangeScreenTo("mini_td::Screens::main_menu");
+		}
+		ImGui::PopStyleColor(3);
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		ImGui::Text("TODO");
 	}
 	ImGui::End();
 }

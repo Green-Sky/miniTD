@@ -26,7 +26,6 @@
 #include <mm/soloud_json.hpp>
 
 #include "../game_scene.hpp"
-#include "SDL_video.h"
 
 #include <mm/opengl/camera_3d.hpp>
 
