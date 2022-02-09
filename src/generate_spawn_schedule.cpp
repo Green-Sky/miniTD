@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
 			{
 				1, // lvl
 				32, // count
-				2.f, // interval
+				1.5f, // interval
 				0.f // inital_time_accu
 			},
 		};
@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 			{
 				1, // lvl
 				32+16, // count
-				1.5f, // interval
+				1.3f, // interval
 				0.f // inital_time_accu
 			},
 		};
@@ -32,13 +32,13 @@ int main(int argc, char** argv) {
 			{
 				1, // lvl
 				32, // count
-				1.5f, // interval
+				1.3f, // interval
 				0.f // inital_time_accu
 			},
 			{
 				2, // lvl
 				8, // count
-				3.f, // interval
+				2.f, // interval
 				-6.f // inital_time_accu
 			},
 		};
@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
 			{
 				1, // lvl
 				32, // count
-				1.5f, // interval
+				1.3f, // interval
 				0.f // inital_time_accu
 			},
 			{
@@ -66,6 +66,54 @@ int main(int argc, char** argv) {
 				8, // count
 				2.f, // interval
 				-32.f // inital_time_accu
+			},
+		};
+		ss.schedule[++curr_wave] = { // 5
+			{
+				3, // lvl
+				16, // count
+				1.f, // interval
+				0.f // inital_time_accu
+			},
+			{
+				1, // lvl
+				16, // count
+				0.7f, // interval
+				-12.f // inital_time_accu
+			},
+			{
+				2, // lvl
+				16, // count
+				2.f, // interval
+				-16.f // inital_time_accu
+			},
+		};
+		ss.schedule[++curr_wave] = { // 6
+			{
+				3, // lvl
+				48, // count
+				0.5f, // interval
+				0.f // inital_time_accu
+			},
+		};
+		ss.schedule[++curr_wave] = { // 7
+			{
+				1, // lvl
+				64, // count
+				0.2f, // interval
+				0.f // inital_time_accu
+			},
+			{
+				2, // lvl
+				16, // count
+				1.f, // interval
+				-14.f // inital_time_accu
+			},
+			{
+				3, // lvl
+				16, // count
+				1.1f, // interval
+				-16.f // inital_time_accu
 			},
 		};
 	}
