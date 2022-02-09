@@ -73,13 +73,13 @@ void GameHUD::update(MM::Engine& engine) {
 	ImGui::SetNextWindowPos({display_w*game_portion*0.5f - lives_window_width_estimate*0.5f, 0});
 	if (ImGui::Begin("lives", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize)) {
 		const auto& w = scene.ctx<Components::Wave>().wave;
-		ImGui::Text("wave: %ld", w);
+		ImGui::Text("wave: %ld", (long)w);
 
 		const auto& pl = scene.ctx<Components::PlayerLives>();
-		ImGui::Text("lives: %ld/%ld", pl.lives, pl.max);
+		ImGui::Text("lives: %ld/%ld", (long)pl.lives, (long)pl.max);
 
 		const auto& m = scene.ctx<Components::Money>().count;
-		ImGui::Text("money: %ld", m);
+		ImGui::Text("money: %ld", (long)m);
 	}
 	ImGui::End();
 
