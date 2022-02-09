@@ -1,5 +1,6 @@
 #pragma once
 
+#include "mm/engine.hpp"
 #include <mm/engine_fwd.hpp>
 #include <mm/services/service.hpp>
 
@@ -19,12 +20,19 @@ class GameHUD : public MM::Services::Service {
 		bool enable(MM::Engine& engine, std::vector<MM::UpdateStrategies::TaskInfo>& task_array) override;
 		void disable(MM::Engine& engine) override;
 
-	private: // tasks
+	public:
+		bool debug {false};
+
+	private:
 		void update(MM::Engine& engine);
 
 		void updateTimer(void);
 
 		void updateCamera(MM::Scene& scene, float fractional_offset);
+
+		void renderToolbarBuild(MM::Engine& engine);
+		void renderToolbarStats(MM::Engine& engine);
+		void renderToolbarDebug(MM::Engine& engine);
 
 		// true = rect
 		void drawTower(bool outer, bool inner, const ImVec2& size, const ImVec2& pos) const;

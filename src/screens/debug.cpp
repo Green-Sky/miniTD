@@ -8,6 +8,7 @@
 #include <mm/services/screen_director.hpp>
 #include <mm/services/screen_director_tools.hpp>
 #include <mm/services/sound_tools.hpp>
+#include "../services/game_hud.hpp"
 
 #include <mm/opengl/render_tasks/imgui.hpp>
 
@@ -57,6 +58,8 @@ void create_enable_debug(MM::Engine& engine, MM::Services::ScreenDirector::Scree
 			_engine.getService<MM::Services::ImGuiMenuBar>().show_menu_bar = false;
 		}
 #endif
+
+		_engine.getService<Services::GameHUD>().debug = true;
 
 		_engine.getService<MM::Services::ScreenDirector>().queueChangeScreenTo(next_screen);
 	};
