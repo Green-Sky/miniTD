@@ -32,6 +32,7 @@
 #include "./systems/wave_logic.hpp"
 #include "./systems/play_sound_on_damage.hpp"
 #include "./systems/camera_trauma_update.hpp"
+#include "./systems/player_death.hpp"
 #include <fx_draw/systems/fx_timer.hpp>
 
 
@@ -102,6 +103,7 @@ std::unique_ptr<MM::Scene> create_game_scene(MM::Engine& engine, const Mission1&
 	org.emplace<Systems::target_first>("target_first");
 	org.emplace<Systems::tower_cooldown>("tower_cooldown");
 	org.emplace<Systems::tower_projectile_spawner>("tower_projectile_spawner");
+	org.emplace<Systems::player_death>("player_death"); // put after succ enemies?
 
 	return new_scene;
 }

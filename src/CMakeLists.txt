@@ -78,6 +78,8 @@ add_executable(miniTD1
 	./systems/play_sound_on_damage.cpp
 	./systems/camera_trauma_update.hpp
 	./systems/camera_trauma_update.cpp
+	./systems/player_death.hpp
+	./systems/player_death.cpp
 
 	./entities/enemy.hpp
 	./entities/enemy.cpp
