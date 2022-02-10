@@ -129,10 +129,83 @@ void GameHUD::update(MM::Engine& engine) {
 					button_height - button_height*padding*2.f
 				};
 
-				// speed button, 1x and 4x ?
-				//ImGui::Text("test");
-				scene.ctx<Components::Wave>().active;
-				scene.ctx<MM::Components::TimeDelta>().deltaFactor;
+				{ // speed button, 1x and 4x ?
+					auto& wave = scene.ctx<Components::Wave>();
+					const bool wave_active = wave.active;
+					auto& deltaFactor = scene.ctx<MM::Components::TimeDelta>().deltaFactor;
+					const bool double_arrow = wave_active && deltaFactor != 1.f;
+
+					const auto cp = ImGui::GetCursorScreenPos();
+					// color yellow if in wave, green otherwise
+					if (wave_active) {
+						ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.65, 0.65, 0.15, 1));
+						ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.8, 0.8, 0.3, 1));
+						ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1, 1, 0.2, 1));
+					} else {
+						ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.15, 0.65, 0.15, 1));
+						ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3, 0.8, 0.3, 1));
+						ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2, 1, 0.2, 1));
+					}
+					if (ImGui::Button("##play", {button_height, button_height})) {
+						if (wave_active) { // if active toggle speed
+							if (deltaFactor == 1.f) {
+								deltaFactor = 3.f;
+							} else {
+								deltaFactor = 1.f;
+							}
+						} else {
+							wave.start = true;
+						}
+					}
+					ImGui::PopStyleColor(3);
+
+					auto* dl = ImGui::GetWindowDrawList();
+
+					const ImVec2 padded_cp {
+						cp.x + button_height*padding,
+						cp.y + button_height*padding
+					};
+
+					if (double_arrow) {
+						const ImVec2 padded_center1 {
+							padded_cp.x + padded_size.x*0.25f,
+							padded_cp.y + padded_size.y*0.5f
+						};
+
+						dl->AddCircleFilled(
+							padded_center1,
+							padded_size.x * 0.25f,
+							IM_COL32_WHITE,
+							3
+						);
+
+						const ImVec2 padded_center2 {
+							padded_cp.x + padded_size.x*0.75f,
+							padded_cp.y + padded_size.y*0.5f
+						};
+
+						dl->AddCircleFilled(
+							padded_center2,
+							padded_size.x * 0.25f,
+							IM_COL32_WHITE,
+							3
+						);
+					} else {
+						const ImVec2 padded_center {
+							padded_cp.x + padded_size.x*0.5f,
+							padded_cp.y + padded_size.y*0.5f
+						};
+
+						dl->AddCircleFilled(
+							padded_center,
+							padded_size.x * 0.5f,
+							IM_COL32_WHITE,
+							3
+						);
+					}
+				}
+
+				ImGui::SameLine();
 
 				{ // auto button
 					auto& auto_proceed = scene.ctx<Components::Wave>().auto_proceed;
