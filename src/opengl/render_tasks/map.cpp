@@ -11,10 +11,20 @@
 namespace mini_td::OpenGL::RenderTasks {
 
 void Map::render(MM::Services::OpenGLRenderer& rs, MM::Engine& engine) {
-	auto& scene = engine.getService<MM::Services::SceneServiceInterface>().getScene();
-	const auto& path = scene.ctx<Components::Path>();
+	auto* ssi = engine.tryService<MM::Services::SceneServiceInterface>();
+	if (ssi == nullptr) {
+		return; // nothing to draw
+	}
 
-	_fx_draw.setCamera(scene.ctx<MM::OpenGL::Camera3D>());
+	auto& scene = ssi->getScene();
+
+	if (!scene.ctx().contains<MM::OpenGL::Camera3D>()) {
+		return; // nothing to draw
+	}
+
+	_fx_draw.setCamera(scene.ctx().at<MM::OpenGL::Camera3D>());
+
+	const auto& path = scene.ctx().at<Components::Path>();
 
 	rs.targets[target_fbo]->bind(MM::OpenGL::FrameBufferObject::W);
 

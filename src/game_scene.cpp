@@ -45,15 +45,15 @@ std::unique_ptr<MM::Scene> create_game_scene(MM::Engine& engine, const Mission1&
 	std::unique_ptr<MM::Scene> new_scene = std::make_unique<MM::Scene>();
 	auto& scene = *new_scene;
 
-	scene.set<MM::Engine&>(engine);
+	scene.ctx().emplace<MM::Engine&>(engine);
 
-	scene.set<Components::GameConstants>();
+	scene.ctx().emplace<Components::GameConstants>();
 
-	scene.set<Components::PlayerLives>(mission.starting_lives, mission.starting_lives);
-	scene.set<Components::Money>(mission.starting_money);
+	scene.ctx().emplace<Components::PlayerLives>(mission.starting_lives, mission.starting_lives);
+	scene.ctx().emplace<Components::Money>(mission.starting_money);
 
 	{ // map
-		auto& path = scene.set<Components::Path>(static_cast<Components::Path>(fs.readJson(mission.map_file_path.c_str())));
+		auto& path = scene.ctx().emplace<Components::Path>(static_cast<Components::Path>(fs.readJson(mission.map_file_path.c_str())));
 		//mission.map_file_path;
 		//path.points = {
 			//{0.f, 5.f},
@@ -63,26 +63,26 @@ std::unique_ptr<MM::Scene> create_game_scene(MM::Engine& engine, const Mission1&
 		//};
 		//path.extents = {10.f, 10.f};
 
-		auto& path_util = scene.set<Components::PathUtil>(path);
+		auto& path_util = scene.ctx().emplace<Components::PathUtil>(path);
 		SPDLOG_INFO("path length: {}", path_util.total_length);
 	}
 
-	scene.set<MM::OpenGL::Camera3D>();
-	scene.set<Components::CameraTrauma>();
+	scene.ctx().emplace<MM::OpenGL::Camera3D>();
+	scene.ctx().emplace<Components::CameraTrauma>();
 
-	auto& wave = scene.set<Components::Wave>();
+	auto& wave = scene.ctx().emplace<Components::Wave>();
 	wave.wave = mission.starting_wave > 0 ? mission.starting_wave : 0;
 	wave.final_wave = mission.final_wave;
 	// TODO: different logic for endless vs normal mode
 	wave.money_per_completed_wave = mission.money_per_wave;
 	// ss
 	if (fs.isFile(mission.spawn_schedule_file_path.c_str())) {
-		scene.set<Components::SpawnSchedule>() = fs.readJson(mission.spawn_schedule_file_path.c_str());
+		scene.ctx().emplace<Components::SpawnSchedule>() = fs.readJson(mission.spawn_schedule_file_path.c_str());
 	} else {
 		SPDLOG_ERROR("spawn schedule file not found '{}'", mission.spawn_schedule_file_path);
 	}
 
-	auto& org = scene.set<entt::organizer>();
+	auto& org = scene.ctx().emplace<entt::organizer>();
 	org.emplace<Systems::camera_trauma_update>("camera_trauma_update");
 	org.emplace<fx_draw::Systems::fx_timer>("fx_timer");
 	org.emplace<Systems::wave_logic>("wave_logic");
