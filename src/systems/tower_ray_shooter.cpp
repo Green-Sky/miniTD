@@ -26,7 +26,7 @@ void tower_ray_shooter(
 			const auto& ray_end = scene.get<MM::Components::Position2D>(t_target.e).pos;
 			auto ray_e = scene.create();
 			scene.emplace<fx_draw::Components::FXTimer>(ray_e, 0.1f, 0.1f);
-			scene.emplace<fx_draw::Components::SimpleLine>(ray_e, ray_start, ray_end, glm::vec4{1.f, 1.f, 1.f, 0.6f});
+			scene.emplace<fx_draw::Components::SimpleLine>(ray_e, ray_start, ray_end, glm::vec4{1.8f, 1.8f, 1.8f, 1.f});
 		}
 	});
 }

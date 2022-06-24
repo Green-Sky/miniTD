@@ -58,7 +58,7 @@ void Towers::render(MM::Services::OpenGLRenderer& rs, MM::Engine& engine) {
 // done
 void Towers::draw_tower_type1(glm::vec2 pos, float tower_radius) {
 	glm::vec3 color {
-		0.9f, 0.9f, 0.9f
+		1.2f, 1.2f, 1.2f
 	};
 
 	_fx_draw.drawSolidCircle(pos, tower_radius, {color, 0.2f});
@@ -74,7 +74,7 @@ void Towers::draw_tower_type1(glm::vec2 pos, float tower_radius) {
 // done
 void Towers::draw_tower_type2(glm::vec2 pos, float tower_radius) {
 	glm::vec3 color {
-		0.9f, 0.9f, 0.9f
+		1.2f, 1.2f, 1.2f
 	};
 
 	_fx_draw.drawSolidCircle(pos, tower_radius, {color, 0.2f});
@@ -87,7 +87,7 @@ void Towers::draw_tower_type2(glm::vec2 pos, float tower_radius) {
 // done
 void Towers::draw_tower_type3(glm::vec2 pos, float tower_radius) {
 	glm::vec3 color {
-		0.9f, 0.9f, 0.9f
+		1.2f, 1.2f, 1.2f
 	};
 
 	_fx_draw.drawSolidCircle(pos, tower_radius, {color, 0.2f}, 4.f);
@@ -99,7 +99,7 @@ void Towers::draw_tower_type3(glm::vec2 pos, float tower_radius) {
 // line inner
 void Towers::draw_tower_type4(glm::vec2 pos, float tower_radius) {
 	glm::vec3 color {
-		0.9f, 0.9f, 0.9f
+		1.2f, 1.2f, 1.2f
 	};
 
 	_fx_draw.drawSolidCircle(pos, tower_radius, {color, 0.2f}, 4.f);

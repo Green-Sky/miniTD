@@ -45,9 +45,9 @@ void Enemies::draw_enemy(glm::vec2 pos, int64_t level, float radius) {
 	// TODO: refine this
 	// TODO: extract this
 	glm::vec3 color_list[] {
-		{0.f, 0.9f, 0.f},
-		{0.1f, 0.3f, 0.8f},
-		{0.9f, 0.0f, 0.f},
+		{0.f, 1.8f, 0.f},
+		{0.2f, 0.6f, 1.6f},
+		{1.8f, 0.0f, 0.f},
 	};
 	glm::vec3 color = color_list[((level - 1) / 3)%3];
 

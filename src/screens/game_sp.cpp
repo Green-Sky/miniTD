@@ -16,16 +16,23 @@
 
 #include "../entities/tower.hpp"
 
+#include <mm/opengl/render_tasks/clear.hpp>
+#include <mm/opengl/bloom.hpp>
+#include <mm/opengl/render_tasks/composition.hpp>
 #include "../opengl/render_tasks/map.hpp"
 #include "../opengl/render_tasks/enemies.hpp"
 #include "../opengl/render_tasks/projectiles.hpp"
 #include "../opengl/render_tasks/towers.hpp"
 #include <fx_draw/opengl/render_tasks/fx_renderer.hpp>
 
+#include <mm/opengl/fbo_builder.hpp>
+#include <mm/opengl/texture_loader.hpp>
+
 #include <soloud_sfxr.h>
 #include <mm/soloud_json.hpp>
 
 #include "../game_scene.hpp"
+#include "mm/services/scene_service_interface.hpp"
 
 #include <mm/opengl/camera_3d.hpp>
 
@@ -63,12 +70,71 @@ static void game_sp_start_fn(MM::Engine& engine) {
 
 	{ // rendering
 		auto& rs = engine.getService<MM::Services::OpenGLRenderer>();
+
+		{ // texture / fbo setup
+			using namespace entt::literals;
+
+			const float render_scale = 1.f;
+
+			auto& rm_t = MM::ResourceManager<MM::OpenGL::Texture>::ref();
+			auto [w, h] = engine.getService<MM::Services::SDLService>().getWindowSize();
+
+
+			// hdr color gles3 / webgl2
+			rm_t.reload<MM::OpenGL::TextureLoaderEmpty>(
+				"hdr_color",
+				GL_RGBA16F,
+				w * render_scale, h * render_scale,
+				GL_RGBA,
+				GL_HALF_FLOAT
+			);
+			{ // filter
+				rm_t.get("hdr_color"_hs)->bind(0);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			}
+
+			rs.targets["game_view"] = MM::OpenGL::FBOBuilder::start()
+				.attachTexture(rm_t.get("hdr_color"_hs), GL_COLOR_ATTACHMENT0)
+				// we need not depth?
+				//.attachTexture(rm_t.get("depth"_hs), GL_DEPTH_ATTACHMENT)
+				.setResizeFactors(render_scale, render_scale)
+				.setResize(true)
+				.finish();
+			assert(rs.targets["game_view"]);
+
+		}
+
 		rs.render_tasks.clear();
-		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Map>(engine);
-		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Enemies>(engine);
-		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Towers>(engine);
-		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Projectiles>(engine);
-		rs.addRenderTask<fx_draw::OpenGL::RenderTasks::FXDrawRenderTask>(engine);
+
+		// clear
+		auto& clear_opaque = rs.addRenderTask<MM::OpenGL::RenderTasks::Clear>(engine);
+		clear_opaque.target_fbo = "game_view";
+		// clears all color attachments
+		clear_opaque.r = 0.1f;
+		clear_opaque.g = 0.1f;
+		clear_opaque.b = 0.1f;
+		clear_opaque.a = 1.f;
+		clear_opaque.mask = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+
+		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Map>(engine).target_fbo = "game_view";
+		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Enemies>(engine).target_fbo = "game_view";
+		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Towers>(engine).target_fbo = "game_view";
+		rs.addRenderTask<mini_td::OpenGL::RenderTasks::Projectiles>(engine).target_fbo = "game_view";
+		rs.addRenderTask<fx_draw::OpenGL::RenderTasks::FXDrawRenderTask>(engine).target_fbo = "game_view";
+
+		// rn does rt too
+		MM::OpenGL::setup_bloom(engine, "hdr_color", 6, 1.f);
+
+		// not part of setup_bloom
+		auto& comp = rs.addRenderTask<MM::OpenGL::RenderTasks::Composition>(engine);
+		comp.color_tex = "hdr_color";
+		comp.bloom_tex = "blur_tmp1";
+		comp.target_fbo = "display";
+
 		rs.addRenderTask<MM::OpenGL::RenderTasks::ImGuiRT>(engine);
 	}
 
@@ -85,6 +151,8 @@ static void game_sp_start_fn(MM::Engine& engine) {
 			rm.get("hurt"_hs)->mParams.master_vol = 0.3f;
 		}
 	}
+
+	//engine.getService<MM::Services::SceneServiceInterface>().getScene().ctx().emplace
 }
 
 void create_game_sp(MM::Engine& engine, MM::Services::ScreenDirector::Screen& screen) {

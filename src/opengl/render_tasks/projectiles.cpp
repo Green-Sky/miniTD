@@ -4,6 +4,7 @@
 #include <entt/entity/registry.hpp>
 
 #include <mm/opengl/camera_3d.hpp>
+#include "../../components/game_constants.hpp"
 
 #include "../../components/projectile.hpp"
 #include <mm/components/position2d.hpp>
@@ -32,8 +33,8 @@ void Projectiles::render(MM::Services::OpenGLRenderer& rs, MM::Engine& engine) {
 	scene.view<const Components::Projectile, const MM::Components::Position2D>()
 	.each([this](const auto& pj_comp, const auto& pos_comp) {
 		// TODO: extract?
-		_fx_draw.drawSolidCircle(pos_comp.pos, pj_comp.radius, {1.f, 0.f, 1.f, 0.2f});
-		_fx_draw.drawCircle(pos_comp.pos, pj_comp.radius, {1.f, 0.f, 1.f, 1.f});
+		_fx_draw.drawSolidCircle(pos_comp.pos, pj_comp.radius, {2.f, 0.f, 2.f, 0.2f});
+		_fx_draw.drawCircle(pos_comp.pos, pj_comp.radius, {2.f, 0.f, 2.f, 1.f});
 	});
 
 	_fx_draw.flushTris();
