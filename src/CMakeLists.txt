@@ -129,6 +129,9 @@ target_link_libraries(miniTD1 PUBLIC
 	fx_draw
 
 	mm_logo_screen
+
+	mm_tox
+	mm_tox_imgui
 )
 
 if(EMSCRIPTEN)
