@@ -1,0 +1,10 @@
+{
+  "final_wave": 32,
+  "map_file_path": "/maps/cubic_frog.json",
+  "money_per_wave": 64,
+  "spawn_schedule_file_path": "/default_schedule.json",
+  "starting_lives": 150,
+  "starting_money": 200,
+  "starting_wave": 1,
+  "title": "Cubic Frog: Easy"
+}
