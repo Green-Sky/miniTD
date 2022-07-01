@@ -22,6 +22,10 @@
 #include <mm/services/scene_tools.hpp>
 #include <mm/services/sound_tools.hpp>
 
+#include <services/mm_tox/tox_service.hpp>
+#include <services/mm_tox/tox_chat.hpp>
+#include <services/mm_tox/tox_net_channeled.hpp>
+
 bool setup_engine(MM::Engine& engine, int argc, char** argv) {
 	return setup_engine_t<
 		MM::Services::SDLService, // enabled by default
@@ -40,6 +44,10 @@ bool setup_engine(MM::Engine& engine, int argc, char** argv) {
 		MM::Services::ImGuiSoundTools,
 
 		MM::Services::OrganizerSceneService,
+
+		MM::Services::Tox::ToxService,
+		MM::Services::Tox::ToxChat,
+		MM::Services::Tox::ToxNetChanneled,
 
 		mini_td::Services::MainMenu,
 		mini_td::Services::GameHUD,

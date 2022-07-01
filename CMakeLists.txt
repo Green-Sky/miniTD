@@ -38,6 +38,8 @@ add_subdirectory("external/MushMachine" EXCLUDE_FROM_ALL)
 
 add_subdirectory("external/fx_draw" EXCLUDE_FROM_ALL)
 
+add_subdirectory("external/mm_tox" EXCLUDE_FROM_ALL)
+
 # Bump up warning levels appropriately for clang, gcc & msvc
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
