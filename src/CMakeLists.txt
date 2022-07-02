@@ -254,6 +254,8 @@ add_executable(miniTDTox
 
 	./setup_meta.hpp
 	./setup_meta.cpp
+	./comp_meta.hpp
+	./comp_meta.cpp
 
 	./main_tox.cpp
 )
