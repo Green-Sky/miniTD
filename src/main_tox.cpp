@@ -2,11 +2,8 @@
 #include <mm/logger.hpp>
 #include <spdlog/cfg/env.h>
 
-#include <entt/entity/registry.hpp>
-
 #include "./setup_services.hpp"
 
-#include <mm/services/sdl_service.hpp>
 #include <mm/services/sound_service.hpp>
 #include <mm/services/opengl_renderer.hpp>
 #include <mm/services/screen_director.hpp>
@@ -21,6 +18,28 @@
 #include <mm/services/screen_director_tools.hpp>
 #include <mm/services/scene_tools.hpp>
 #include <mm/services/sound_tools.hpp>
+
+#include <services/mm_tox/tox_service.hpp>
+#include <services/mm_tox/tox_chat.hpp>
+#include <services/mm_tox/tox_net_channeled.hpp>
+
+#include "./setup_meta.hpp"
+
+#include <entt/entity/registry.hpp>
+
+template<>
+bool setup_service<MM::Services::Tox::ToxService>(MM::Engine& engine, [[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
+	auto& tox_service = engine.addService<MM::Services::Tox::ToxService>(engine, "save.tox");
+
+	tox_service._app_name = "miniTD";
+
+	if (!engine.enableService<MM::Services::Tox::ToxService>()) {
+		SPDLOG_ERROR("failed to enable service {}", engine.getService<MM::Services::Tox::ToxService>().name());
+		return false;
+	}
+
+	return true;
+}
 
 bool setup_engine(MM::Engine& engine, int argc, char** argv) {
 	return setup_engine_t<
@@ -41,6 +60,10 @@ bool setup_engine(MM::Engine& engine, int argc, char** argv) {
 
 		MM::Services::OrganizerSceneService,
 
+		MM::Services::Tox::ToxService,
+		MM::Services::Tox::ToxChat,
+		MM::Services::Tox::ToxNetChanneled,
+
 		mini_td::Services::MainMenu,
 		mini_td::Services::GameHUD,
 
@@ -58,6 +81,8 @@ int main(int argc, char** argv) {
 		SPDLOG_ERROR("SETUP FAILED!");
 		return 1;
 	}
+
+	mini_td::setup_meta_comps();
 
 	// queue first screen
 
