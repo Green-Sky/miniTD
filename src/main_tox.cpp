@@ -11,6 +11,8 @@
 #include <mm/services/organizer_scene.hpp>
 #include "./services/main_menu.hpp"
 #include "./services/game_hud.hpp"
+#include "./services/lobby_host.hpp"
+#include "./services/lobby_client.hpp"
 
 #include <mm/services/imgui_menu_bar.hpp>
 #include <mm/services/engine_tools.hpp>
@@ -63,6 +65,9 @@ bool setup_engine(MM::Engine& engine, int argc, char** argv) {
 		MM::Services::Tox::ToxService,
 		MM::Services::Tox::ToxChat,
 		MM::Services::Tox::ToxNetChanneled,
+
+		Services::LobbyHost,
+		Services::LobbyClient,
 
 		mini_td::Services::MainMenu,
 		mini_td::Services::GameHUD,
