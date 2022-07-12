@@ -157,12 +157,14 @@ target_link_libraries(generate_spawn_schedule PUBLIC
 
 add_executable(miniTDTox
 	./setup_services.hpp
-	./setup_services.cpp
+	./setup_services_tox.cpp
 
 	./screens/main_menu.hpp
 	./screens/main_menu.cpp
 	./screens/game_sp.hpp
 	./screens/game_sp.cpp
+	./screens/game_mp.hpp
+	./screens/game_mp.cpp
 	./screens/debug.hpp
 	./screens/debug.cpp
 	./screens/end_screen.hpp
@@ -172,6 +174,11 @@ add_executable(miniTDTox
 	./services/main_menu.cpp
 	./services/game_hud.hpp
 	./services/game_hud.cpp
+
+	./services/lobby_host.hpp
+	./services/lobby_host.cpp
+	./services/lobby_client.hpp
+	./services/lobby_client.cpp
 
 	./mission.hpp
 	./mission.cpp
