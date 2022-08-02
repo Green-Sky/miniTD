@@ -43,6 +43,22 @@ bool setup_service<MM::Services::Tox::ToxService>(MM::Engine& engine, [[maybe_un
 	return true;
 }
 
+template<>
+bool setup_service<Services::LobbyClient>(MM::Engine& engine, [[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
+	auto& service = engine.addService<Services::LobbyClient>();
+
+	// ???
+	service.registerHandler<MM::Services::Tox::ToxNetChanneled>("tox", engine);
+
+	// dont auto enable
+	//if (!engine.enableService<Services::LobbyClient>()) {
+		//SPDLOG_ERROR("failed to enable service {}", ((MM::Services::Service*)engine.tryService<Services::LobbyClient>())->name());
+		//return false;
+	//}
+
+	return true;
+}
+
 bool setup_engine(MM::Engine& engine, int argc, char** argv) {
 	return setup_engine_t<
 		MM::Services::SDLService, // enabled by default

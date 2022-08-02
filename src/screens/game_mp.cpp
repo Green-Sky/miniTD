@@ -5,6 +5,8 @@
 #include <mm/services/organizer_scene.hpp>
 #include "../services/game_hud.hpp"
 #include <mm/services/sound_service.hpp>
+#include "../services/lobby_host.hpp"
+#include "../services/lobby_client.hpp"
 
 #include <mm/resource_manager.hpp>
 
@@ -149,6 +151,7 @@ void create_game_mp_host(MM::Engine& engine, MM::Services::ScreenDirector::Scree
 	screen.start_enable.push_back(engine.type<MM::Services::ImGuiService>());
 	screen.start_enable.push_back(engine.type<MM::Services::OrganizerSceneService>());
 	screen.start_enable.push_back(engine.type<mini_td::Services::GameHUD>());
+	screen.start_enable.push_back(engine.type<::Services::LobbyHost>());
 
 	// start disable
 	//screen.start_disable.push_back();
@@ -162,13 +165,20 @@ void create_game_mp_host(MM::Engine& engine, MM::Services::ScreenDirector::Scree
 	//screen.start_fn = game_sp_start_fn;
 }
 
+static void game_mp_client_start_fn(MM::Engine& engine) {
+	SPDLOG_INFO("starting game_mp_client screen");
+
+	engine.getService<::Services::LobbyClient>().join("tox:000");
+}
+
 void create_game_mp_client(MM::Engine& engine, MM::Services::ScreenDirector::Screen& screen) {
 	// start enable
 	screen.start_enable.push_back(engine.type<MM::Services::SoundService>()); // shold be active
 	screen.start_enable.push_back(engine.type<MM::Services::OpenGLRenderer>());
 	screen.start_enable.push_back(engine.type<MM::Services::ImGuiService>());
 	screen.start_enable.push_back(engine.type<MM::Services::OrganizerSceneService>());
-	screen.start_enable.push_back(engine.type<mini_td::Services::GameHUD>());
+	//screen.start_enable.push_back(engine.type<mini_td::Services::GameHUD>());
+	screen.start_enable.push_back(engine.type<::Services::LobbyClient>());
 
 	// start disable
 	//screen.start_disable.push_back();
@@ -179,7 +189,7 @@ void create_game_mp_client(MM::Engine& engine, MM::Services::ScreenDirector::Scr
 	screen.end_disable.push_back(engine.type<mini_td::Services::GameHUD>());
 	screen.end_disable.push_back(engine.type<MM::Services::OrganizerSceneService>());
 
-	//screen.start_fn = game_sp_start_fn;
+	screen.start_fn = game_mp_client_start_fn;
 }
 
 } // mini_td::Screens
