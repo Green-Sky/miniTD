@@ -18,6 +18,19 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
+# add this to your projects cmake to enable ipo
+if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+	include(CheckIPOSupported)
+	check_ipo_supported(RESULT HAVE_LTO)
+	if(HAVE_LTO)
+		set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+		message(STATUS "Enabled LTO")
+	else()
+		message(STATUS "LTO not supported")
+	endif()
+endif()
+
+
 option(BUILD_TESTING "Enable testing with ctest." OFF)
 
 include("${CMAKE_CURRENT_LIST_DIR}/external/MushMachine/mm_options_and_defines.cmake")
