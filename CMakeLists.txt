@@ -42,7 +42,7 @@ add_subdirectory("external/fx_draw" EXCLUDE_FROM_ALL)
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
 
-	#link_libraries(-fsanitize=address)
+	#link_libraries(-fsanitize=address,undefined)
 elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
 	if (CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
 		string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")

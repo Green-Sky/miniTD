@@ -23,7 +23,7 @@ void Projectiles::render(MM::Services::OpenGLRenderer& rs, MM::Engine& engine) {
 		return; // nothing to draw
 	}
 
-	_fx_draw.setCamera(scene.ctx().at<MM::OpenGL::Camera3D>());
+	_fx_draw.setCamera(scene.ctx().get<MM::OpenGL::Camera3D>());
 
 	rs.targets[target_fbo]->bind(MM::OpenGL::FrameBufferObject::W);
 

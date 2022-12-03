@@ -75,17 +75,17 @@ void GameHUD::update(MM::Engine& engine) {
 	const float lives_window_width_estimate = char_width * char_count;
 	ImGui::SetNextWindowPos({display_w*game_portion*0.5f - lives_window_width_estimate*0.5f, 0});
 	if (ImGui::Begin("lives", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize)) {
-		const auto& w = scene.ctx().at<Components::Wave>();
+		const auto& w = scene.ctx().get<Components::Wave>();
 		if (w.final_wave >= 0) {
 			ImGui::Text("wave: %ld/%ld", (long)w.wave, (long)w.final_wave);
 		} else {
 			ImGui::Text("wave: %ld/inf", (long)w.wave);
 		}
 
-		const auto& pl = scene.ctx().at<Components::PlayerLives>();
+		const auto& pl = scene.ctx().get<Components::PlayerLives>();
 		ImGui::Text("lives: %ld/%ld", (long)pl.lives, (long)pl.max);
 
-		const auto& m = scene.ctx().at<Components::Money>().count;
+		const auto& m = scene.ctx().get<Components::Money>().count;
 		ImGui::Text("money: %ld", (long)m);
 
 		ImGui::Text("wave time: %lds", (long)w.time_into_wave);
@@ -130,9 +130,9 @@ void GameHUD::update(MM::Engine& engine) {
 				};
 
 				{ // speed button, 1x and 4x ?
-					auto& wave = scene.ctx().at<Components::Wave>();
+					auto& wave = scene.ctx().get<Components::Wave>();
 					const bool wave_active = wave.active;
-					auto& deltaFactor = scene.ctx().at<MM::Components::TimeDelta>().deltaFactor;
+					auto& deltaFactor = scene.ctx().get<MM::Components::TimeDelta>().deltaFactor;
 					const bool double_arrow = wave_active && deltaFactor != 1.f;
 
 					const auto cp = ImGui::GetCursorScreenPos();
@@ -208,7 +208,7 @@ void GameHUD::update(MM::Engine& engine) {
 				ImGui::SameLine();
 
 				{ // auto button
-					auto& auto_proceed = scene.ctx().at<Components::Wave>().auto_proceed;
+					auto& auto_proceed = scene.ctx().get<Components::Wave>().auto_proceed;
 					const auto cp = ImGui::GetCursorScreenPos();
 					const bool active_col = auto_proceed;
 					if (active_col) {
@@ -303,8 +303,8 @@ void GameHUD::updateTimer(void) {
 }
 
 void GameHUD::updateCamera(MM::Scene& scene, float fractional_offset) {
-	const auto& path = scene.ctx().at<Components::Path>();
-	auto& cam = scene.ctx().at<MM::OpenGL::Camera3D>();
+	const auto& path = scene.ctx().get<Components::Path>();
+	auto& cam = scene.ctx().get<MM::OpenGL::Camera3D>();
 
 	// center cam on map and
 	// offset pos by fraction of width
@@ -318,14 +318,14 @@ void GameHUD::updateCamera(MM::Scene& scene, float fractional_offset) {
 	cam.horizontalViewPortSize = glm::max(path.extents.x, path.extents.y) * cam.screenRatio;
 
 	// apply screen shake
-	const auto& trauma = scene.ctx().at<Components::CameraTrauma>().trauma;
+	const auto& trauma = scene.ctx().get<Components::CameraTrauma>().trauma;
 	//const auto& trauma = 1.f;
 	const float trauma_squared = trauma * trauma;
 
 	// HACK
 	_screen_shake_time += _delta;
 
-	const auto& gc = scene.ctx().at<Components::GameConstants>();
+	const auto& gc = scene.ctx().get<Components::GameConstants>();
 	const float scale = 0.25f; // noise scale // TODO: expose to gc?
 
 	cam.roll = gc.camera_shake_max_angle * trauma_squared * SquirrelNoise4::Compute1dPerlinNoise(_screen_shake_time, scale, 2u, 0.7f, 2.f, true, 103u);
@@ -343,7 +343,7 @@ void GameHUD::renderToolbarBuild(MM::Engine& engine) {
 	auto& ssi = engine.getService<MM::Services::SceneServiceInterface>();
 	auto& scene = ssi.getScene();
 
-	const bool enough_money = scene.ctx().at<Components::Money>().count >= 100;
+	const bool enough_money = scene.ctx().get<Components::Money>().count >= 100;
 	if (enough_money) {
 		// green-ish
 		//ImGui::PushStyleColor(ImGuiCol_Button, {1.f, 1.f, 1.f, 0.4f});
@@ -485,7 +485,7 @@ void GameHUD::renderToolbarDebug(MM::Engine& engine) {
 	auto& ssi = engine.getService<MM::Services::SceneServiceInterface>();
 	auto& scene = ssi.getScene();
 
-	ImGui::InputScalar("money", ImGuiDataType_S64, &scene.ctx().at<Components::Money>().count);
+	ImGui::InputScalar("money", ImGuiDataType_S64, &scene.ctx().get<Components::Money>().count);
 	if (ImGui::TreeNode("Spawn SpawnGroup")) {
 		static int64_t level = 1;
 		ImGui::InputScalar("level", ImGuiDataType_S64, &level);
@@ -543,7 +543,7 @@ void GameHUD::updateTowerPreview(MM::Engine& engine) {
 
 	{ // update position
 		auto& e_pos = scene.get<MM::Components::Position2D>(_tower_placement_preview);
-		const auto& cam = scene.ctx().at<MM::OpenGL::Camera3D>();
+		const auto& cam = scene.ctx().get<MM::OpenGL::Camera3D>();
 
 		const auto mouse_pos = ImGui::GetMousePos();
 		const auto window_size = ImGui::GetIO().DisplaySize;
@@ -561,7 +561,7 @@ void GameHUD::updateTowerPreview(MM::Engine& engine) {
 		const glm::vec4 world = cam.screenToWorld(screen);
 
 		// set and clamp into world
-		const auto& world_extent = scene.ctx().at<Components::Path>().extents;
+		const auto& world_extent = scene.ctx().get<Components::Path>().extents;
 		e_pos.pos = glm::clamp(glm::vec2{world.x, world.y}, {0, 0}, world_extent);
 	}
 
@@ -583,7 +583,7 @@ void GameHUD::updateTowerPreview(MM::Engine& engine) {
 			scene.destroy(_tower_placement_preview);
 			_tower_placement_preview = entt::null;
 
-			scene.ctx().at<Components::Money>().count -= 100;
+			scene.ctx().get<Components::Money>().count -= 100;
 		}
 	}
 }

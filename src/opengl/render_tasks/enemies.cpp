@@ -23,9 +23,9 @@ void Enemies::render(MM::Services::OpenGLRenderer& rs, MM::Engine& engine) {
 		return; // nothing to draw
 	}
 
-	_fx_draw.setCamera(scene.ctx().at<MM::OpenGL::Camera3D>());
+	_fx_draw.setCamera(scene.ctx().get<MM::OpenGL::Camera3D>());
 
-	const auto& gc = scene.ctx().at<Components::GameConstants>();
+	const auto& gc = scene.ctx().get<Components::GameConstants>();
 
 	rs.targets[target_fbo]->bind(MM::OpenGL::FrameBufferObject::W);
 
