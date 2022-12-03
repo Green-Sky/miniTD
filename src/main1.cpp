@@ -2,8 +2,11 @@
 #include <mm/logger.hpp>
 #include <spdlog/cfg/env.h>
 
+#include <entt/entity/registry.hpp>
+
 #include "./setup_services.hpp"
 
+#include <mm/services/sdl_service.hpp>
 #include <mm/services/sound_service.hpp>
 #include <mm/services/opengl_renderer.hpp>
 #include <mm/services/screen_director.hpp>
@@ -18,8 +21,6 @@
 #include <mm/services/screen_director_tools.hpp>
 #include <mm/services/scene_tools.hpp>
 #include <mm/services/sound_tools.hpp>
-
-#include <entt/entity/registry.hpp>
 
 bool setup_engine(MM::Engine& engine, int argc, char** argv) {
 	return setup_engine_t<
