@@ -30,9 +30,9 @@
 
 #include <soloud_sfxr.h>
 #include <mm/soloud_json.hpp>
+#include <mm/sound_loader_sfxr.hpp>
 
 #include "../game_scene.hpp"
-#include "mm/services/scene_service_interface.hpp"
 
 #include <mm/opengl/camera_3d.hpp>
 
@@ -42,28 +42,6 @@
 #include <utility>
 
 namespace mini_td::Screens {
-
-struct SoundLoaderSfxrPreset {
-	std::shared_ptr<::SoLoud::Sfxr> load(const ::SoLoud::Sfxr::SFXR_PRESETS preset, const int seed) const {
-		auto sfxr = std::make_shared<::SoLoud::Sfxr>();
-		sfxr->loadPreset(preset, seed);
-		return sfxr;
-	}
-};
-
-struct SoundLoaderSfxrJson {
-	std::shared_ptr<::SoLoud::Sfxr> load(const nlohmann::json& j) const {
-		auto sfxr = std::make_shared<::SoLoud::Sfxr>();
-		*sfxr = j;
-		return sfxr;
-	}
-};
-
-struct SoundLoaderSfxrFile {
-	std::shared_ptr<::SoLoud::Sfxr> load(const std::string& path, MM::Engine& engine) const {
-		return {};
-	}
-};
 
 static void game_sp_start_fn(MM::Engine& engine) {
 	SPDLOG_INFO("starting game_sp screen");
@@ -142,17 +120,13 @@ static void game_sp_start_fn(MM::Engine& engine) {
 		using namespace entt::literals;
 		auto& rm = MM::ResourceManager<SoLoud::Sfxr>::ref();
 		{ // damage (an enemy)
-			//rm.load<SoundLoaderSfxrJson>("damage", nlohmann::json());
-			//rm.load<SoundLoaderSfxrPreset>("damage", SoLoud::Sfxr::SFXR_PRESETS::BLIP, 0);
-			rm.load<SoundLoaderSfxrPreset>("damage", SoLoud::Sfxr::SFXR_PRESETS::BLIP, 1);
+			rm.load<MM::SoundLoaderSfxrPreset>("damage", SoLoud::Sfxr::SFXR_PRESETS::BLIP, 1);
 		}
 		{ // hurt (player loses lives)
-			rm.load<SoundLoaderSfxrPreset>("hurt", SoLoud::Sfxr::SFXR_PRESETS::HURT, 3);
+			rm.load<MM::SoundLoaderSfxrPreset>("hurt", SoLoud::Sfxr::SFXR_PRESETS::HURT, 3);
 			rm.get("hurt"_hs)->mParams.master_vol = 0.3f;
 		}
 	}
-
-	//engine.getService<MM::Services::SceneServiceInterface>().getScene().ctx().emplace
 }
 
 void create_game_sp(MM::Engine& engine, MM::Services::ScreenDirector::Screen& screen) {
