@@ -21,22 +21,22 @@
 #include <mm/services/scene_tools.hpp>
 #include <mm/services/sound_tools.hpp>
 
-#include <services/mm_tox/tox_service.hpp>
-#include <services/mm_tox/tox_chat.hpp>
-#include <services/mm_tox/tox_net_channeled.hpp>
+#include <mm_tox/services/tox_service.hpp>
+#include <mm_tox/services/tox_chat.hpp>
+#include <mm_tox/services/tox_net_channeled.hpp>
 
 #include "./setup_meta.hpp"
 
 #include <entt/entity/registry.hpp>
 
 template<>
-bool setup_service<MM::Services::Tox::ToxService>(MM::Engine& engine, [[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
-	auto& tox_service = engine.addService<MM::Services::Tox::ToxService>(engine, "save.tox");
+bool setup_service<MM::Tox::Services::ToxService>(MM::Engine& engine, [[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
+	auto& tox_service = engine.addService<MM::Tox::Services::ToxService>(engine, "save.tox");
 
 	tox_service._app_name = "miniTD";
 
-	if (!engine.enableService<MM::Services::Tox::ToxService>()) {
-		SPDLOG_ERROR("failed to enable service {}", engine.getService<MM::Services::Tox::ToxService>().name());
+	if (!engine.enableService<MM::Tox::Services::ToxService>()) {
+		SPDLOG_ERROR("failed to enable service {}", engine.getService<MM::Tox::Services::ToxService>().name());
 		return false;
 	}
 
@@ -48,7 +48,7 @@ bool setup_service<Services::LobbyClient>(MM::Engine& engine, [[maybe_unused]] i
 	auto& service = engine.addService<Services::LobbyClient>();
 
 	// ???
-	service.registerHandler<MM::Services::Tox::ToxNetChanneled>("tox", engine);
+	service.registerHandler<MM::Tox::Services::ToxNetChanneled>("tox", engine);
 
 	// dont auto enable
 	//if (!engine.enableService<Services::LobbyClient>()) {
@@ -78,9 +78,9 @@ bool setup_engine(MM::Engine& engine, int argc, char** argv) {
 
 		MM::Services::OrganizerSceneService,
 
-		MM::Services::Tox::ToxService,
-		MM::Services::Tox::ToxChat,
-		MM::Services::Tox::ToxNetChanneled,
+		MM::Tox::Services::ToxService,
+		MM::Tox::Services::ToxChat,
+		MM::Tox::Services::ToxNetChanneled,
 
 		Services::LobbyHost,
 		Services::LobbyClient,
