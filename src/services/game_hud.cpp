@@ -59,7 +59,9 @@ void GameHUD::update(MM::Engine& engine) {
 	auto& ssi = engine.getService<MM::Services::SceneServiceInterface>();
 	auto& scene = ssi.getScene();
 
-	auto [display_w, display_h] = ImGui::GetIO().DisplaySize; // hack
+	const ImGuiViewport* viewport = ImGui::GetMainViewport();
+	//auto [display_w, display_h] = ImGui::GetIO().DisplaySize; // hack
+	//auto [viewport_w, viewport_h] = viewport->WorkSize;
 
 	float game_portion = 1.f;
 	float ui_portion = 0.2f;
@@ -73,7 +75,7 @@ void GameHUD::update(MM::Engine& engine) {
 	const float char_width = ImGui::GetFontSize()*0.8f; // guess
 	const float char_count = 8 + 3 + 3;
 	const float lives_window_width_estimate = char_width * char_count;
-	ImGui::SetNextWindowPos({display_w*game_portion*0.5f - lives_window_width_estimate*0.5f, 0});
+	ImGui::SetNextWindowPos({viewport->WorkSize.x*game_portion*0.5f - lives_window_width_estimate*0.5f, viewport->WorkPos.y});
 	if (ImGui::Begin("lives", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize)) {
 		const auto& w = scene.ctx().get<Components::Wave>();
 		if (w.final_wave >= 0) {
@@ -94,8 +96,8 @@ void GameHUD::update(MM::Engine& engine) {
 
 	if (_toolbar) {
 		// ui (toolbar) to the right
-		ImGui::SetNextWindowPos({display_w*(1.f - ui_portion), 0});
-		ImGui::SetNextWindowSize({display_w*ui_portion, display_h});
+		ImGui::SetNextWindowPos({viewport->WorkSize.x*(1.f - ui_portion), viewport->WorkPos.y});
+		ImGui::SetNextWindowSize({viewport->WorkSize.x*ui_portion, viewport->WorkSize.y});
 		if (ImGui::Begin("toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar)) {
 			const float lower_tools_height = 100.f;
 			const float upper_tools_height = glm::max(ImGui::GetContentRegionAvail().y - lower_tools_height, 1.f);
