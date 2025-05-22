@@ -29,7 +29,8 @@ void target_first(
 		t_target.e = entt::null;
 
 		size_t i = 0;
-		auto enemy_view = scene.view<const Components::PathProgress, const Components::Enemy, const MM::Components::Position2D>().use<const Components::PathProgress>();
+		auto enemy_view = scene.view<const Components::PathProgress, const Components::Enemy, const MM::Components::Position2D>();
+		enemy_view.use<const Components::PathProgress>();
 		for (const auto& [e_e, e_prog, e_enemy, e_pos_comp] : enemy_view.each()) {
 			i++;
 			const float dist = glm::distance(t_pos_comp.pos, e_pos_comp.pos);
