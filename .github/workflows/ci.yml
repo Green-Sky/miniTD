@@ -9,9 +9,8 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
-  EM_VERSION: 2.0.24
+  EM_VERSION: 3.1.32
   EM_CACHE_FOLDER: 'emsdk-cache'
-
 
 jobs:
   linux:
@@ -48,11 +47,15 @@ jobs:
       with:
         submodules: recursive
 
-    #- name: Install Dependencies
-      #run: sudo apt update && sudo apt -y install libsdl2-dev
+    - name: Setup em cache
+      id: em-cache-system-libraries
+      uses: actions/cache@v4
+      with:
+        path: ${{env.EM_CACHE_FOLDER}}
+        key: ${{env.EM_VERSION}}-${{ runner.os }}
 
     - name: Setup emsdk
-      uses: mymindstorm/setup-emsdk@v11
+      uses: mymindstorm/setup-emsdk@v14
       with:
         version: ${{env.EM_VERSION}}
         actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
