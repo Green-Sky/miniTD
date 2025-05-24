@@ -1,6 +1,7 @@
 #pragma once
 
 #include <entt/fwd.hpp>
+#include <entt/entity/storage.hpp>
 
 #include <mm/components/position2d.hpp>
 #include "../components/path_progress.hpp"

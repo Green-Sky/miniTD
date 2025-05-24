@@ -1,6 +1,7 @@
 #pragma once
 
 #include <entt/fwd.hpp>
+#include <entt/entity/storage.hpp>
 
 #include "../components/projectile.hpp"
 #include <mm/components/view_dir2d.hpp>

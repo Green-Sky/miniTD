@@ -1,6 +1,7 @@
 #pragma once
 
 #include <entt/fwd.hpp>
+#include <entt/entity/storage.hpp>
 
 #include "../components/path_progress.hpp"
 #include "../components/enemy.hpp"

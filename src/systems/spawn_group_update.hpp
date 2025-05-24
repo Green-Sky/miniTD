@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mm/engine_fwd.hpp>
+#include <entt/entity/storage.hpp>
 
 #include "../components/spawn_group.hpp"
 #include <mm/components/time_delta.hpp>

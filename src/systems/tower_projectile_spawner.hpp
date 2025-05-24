@@ -1,6 +1,7 @@
 #pragma once
 
 #include <entt/fwd.hpp>
+#include <entt/entity/storage.hpp>
 
 #include "../components/tower_projectile_spawner.hpp"
 #include "../components/tower_cooldown.hpp"
